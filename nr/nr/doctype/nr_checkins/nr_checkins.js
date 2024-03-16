@@ -5,11 +5,13 @@ frappe.ui.form.on("NR Checkins", {
     refresh(frm) {
         // frm.add_custom_button("AAA", ()=>{})
         // frappe.msgprint('A row has been added to the links table 🎉 ');
+        // frappe.set_route('List', 'Task', 'List')
         frm.add_custom_button("Run", function () {
-            // frappe.set_route('List', 'Task', 'List')
-            // frappe.call({
-            //     method: "ext_erp_int.ext_erp_int.doctype.eei_upload"
-            // })
+            frappe.call({
+                method: "nr.nr.doctype.nr_checkins.utils.checkEmployee",
+                type: "POST",
+                args: {first_name: "AAA"}
+            })
         });
     },
 });
