@@ -5,17 +5,19 @@ import frappe, os
 from frappe.model.document import Document
 import pandas as pd
 
+from nr.nr.doctype.nr_checkins.utils import processExcelTorDrink, createCheckins
+
+
 class NRCheckins(Document):
-        
+
     def after_insert(self):
         filepath = frappe.get_site_path() + self.excel
         if not os.path.exists(filepath):
-            frappe.throw('Cannot find files')
+            frappe.throw("Cannot find files")
         else:
             frappe.msgprint("OK")
-			# pd.read_excel("sdfd.xlsx")
-		# doc = frappe.new_doc("Item")
-		# doc.item_code = "name3"
-		# doc.item_name = "name3"
-		# doc.item_group = "Products"
-		# doc.insert()
+            df = processExcelTorDrink(filepath=filepath)
+            df.apply(lambda row: createCheckins(**row.to_dict()), axis=1)
+
+
+# pd.read_excel("sdfd.xlsx")
