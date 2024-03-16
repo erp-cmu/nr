@@ -8,9 +8,13 @@ frappe.ui.form.on("NR Checkins", {
         // frappe.set_route('List', 'Task', 'List')
         frm.add_custom_button("Run", function () {
             frappe.call({
-                method: "nr.nr.doctype.nr_checkins.utils.checkEmployee",
+                method: "nr.nr.doctype.nr_checkins.utils.createCheckins",
                 type: "POST",
-                args: {first_name: "AAA"}
+                args: {attendance_device_id: "AAA"},
+                callback: function (res) {
+                    console.log(res)
+                    frappe.msgprint('A row has been added to the links table 🎉 ');
+                }
             })
         });
     },
