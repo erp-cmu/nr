@@ -5,5 +5,5 @@
 from frappe.tests.utils import FrappeTestCase
 
 
-class TestNRCheckins(FrappeTestCase):
+class TestNRCheckinImport(FrappeTestCase):
 	pass
