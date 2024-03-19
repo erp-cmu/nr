@@ -7,6 +7,7 @@
  "engine": "InnoDB",
  "field_order": [
   "section_break_myld",
+  "default_shift_type",
   "excel",
   "note"
  ],
@@ -24,11 +25,20 @@
    "fieldname": "note",
    "fieldtype": "Data",
    "label": "Note"
+  },
+  {
+   "description": "This is the default \"Shift Type\" for the employees from the excel file that are not assigned to any shift. ",
+   "fieldname": "default_shift_type",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Default Shift Type",
+   "options": "Shift Type",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-03-18 08:35:06.721918",
+ "modified": "2024-03-19 21:30:48.494979",
  "modified_by": "Administrator",
  "module": "NR",
  "name": "NR Checkin Import",
@@ -44,6 +54,18 @@
    "read": 1,
    "report": 1,
    "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HR Manager",
    "share": 1,
    "write": 1
   }

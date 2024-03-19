@@ -1,57 +1,13 @@
 import frappe
 from datetime import datetime
-from dateutil.parser import parse
-from nr.nr_utils.employee import findEmployee, createEmployee
+from nr.nr_utils.employee import createOrUpdateEmployeeNameFromAttnDeviceID
+from nr.nr_utils.common import date_parse
+from nr.nr_utils.shift_assignment import handleShiftAssignment
 
 
-def createOrUpdateEmployeeNameFromAttnDeviceID(attendance_device_id):
-
-    nameFromADID = frappe.db.exists(
-        "Employee",
-        {
-            "attendance_device_id": attendance_device_id,
-        },
-    )
-
-    nameFromSearch = findEmployee(attendance_device_id)
-
-    emp_name = None
-    emp_first_name = None
-
-    if nameFromADID:
-        # Found user with ADID
-        emp_name = nameFromADID
-        emp_first_name = frappe.db.get_value("Employee", emp_name, "first_name")
-    else:
-        if nameFromSearch:
-            # User found without ADID, add one
-            frappe.db.set_value(
-                "Employee",
-                nameFromSearch,
-                "attendance_device_id",
-                attendance_device_id,
-            )
-            emp_name = nameFromSearch
-            emp_first_name = nameFromSearch
-        else:
-            # No user found, create user with random info
-            emp_name, emp_first_name = createEmployee(
-                fullname=attendance_device_id, attendance_device_id=attendance_device_id
-            )
-
-    return emp_name, emp_first_name
-
-
-def date_parse(string, agnostic=True, **kwargs):
-    if agnostic or parse(string, **kwargs) == parse(
-        string, yearfirst=True, **kwargs
-    ) == parse(string, dayfirst=True, **kwargs):
-        return parse(string, **kwargs)
-    else:
-        raise ValueError("The date was ambiguous: %s" % string)
-
-
-def createCheckin(attendance_device_id, log_type, time, device_id="DEFAULT"):
+def createCheckin(
+    attendance_device_id, log_type, time, default_shift_type, device_id="DEFAULT"
+):
 
     if log_type not in ["IN", "OUT"]:
         frappe.throw("Invalid log_type")
@@ -67,6 +23,10 @@ def createCheckin(attendance_device_id, log_type, time, device_id="DEFAULT"):
 
     emp_name, emp_first_name = createOrUpdateEmployeeNameFromAttnDeviceID(
         attendance_device_id
+    )
+
+    shift_type = handleShiftAssignment(
+        emp_name=emp_name, default_shift_type=default_shift_type
     )
 
     isCheckin = frappe.db.exists(
@@ -87,6 +47,7 @@ def createCheckin(attendance_device_id, log_type, time, device_id="DEFAULT"):
                 "log_type": log_type,
                 "time": time,
                 "device_id": device_id,
+                "shift": shift_type,
             }
         )
         newCheckin.insert(ignore_if_duplicate=True)

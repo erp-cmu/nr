@@ -1,6 +1,7 @@
 import pandas as pd
 from nr.nr_utils.checkin import createCheckin
 
+
 def formatExcelP1(row):
     name = row["ชื่อ-นามสกุล"]
     id = name
@@ -33,8 +34,8 @@ def formatExcelP2(row):
     return pd.DataFrame.from_records(datas)
 
 
-def processExcelNakorn(filepath):
-    sheetname = 'รายวัน'
+def processExcelNakorn(filepath, default_shift_type):
+    sheetname = "รายวัน"
     skiprows = 1
     dft = pd.read_excel(filepath, sheet_name=sheetname, skiprows=skiprows)
     df1 = dft.iloc[:, :].apply(formatExcelP1, axis=1)
@@ -42,5 +43,10 @@ def processExcelNakorn(filepath):
     df1.rename(columns={"min": "IN", "max": "OUT"}, inplace=True)
     temp = df1.iloc[:, :].apply(formatExcelP2, axis=1)
     df2 = pd.concat(temp.values).reset_index(drop=True)
-    df2.apply(lambda row: createCheckin(**row.to_dict()), axis=1)
+    df2.apply(
+        lambda row: createCheckin(
+            **row.to_dict(), default_shift_type=default_shift_type
+        ),
+        axis=1,
+    )
     return df2

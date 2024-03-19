@@ -34,12 +34,17 @@ def formatExcelP2(row):
     return pd.DataFrame.from_records(datas)
 
 
-def processExcelTorDrink(filepath):
+def processExcelTorDrink(filepath, default_shift_type):
     dft = pd.read_excel(filepath)
     df1 = dft.iloc[:, :].apply(formatExcelP1, axis=1)
     df1.dropna(inplace=True)
     df1.rename(columns={"min": "IN", "max": "OUT"}, inplace=True)
     temp = df1.iloc[:, :].apply(formatExcelP2, axis=1)
     df2 = pd.concat(temp.values).reset_index(drop=True)
-    df2.apply(lambda row: createCheckin(**row.to_dict()), axis=1)
+    df2.apply(
+        lambda row: createCheckin(
+            **row.to_dict(), default_shift_type=default_shift_type
+        ),
+        axis=1,
+    )
     return df2

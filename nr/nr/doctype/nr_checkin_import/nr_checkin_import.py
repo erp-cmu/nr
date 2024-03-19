@@ -22,10 +22,14 @@ class NRCheckinImport(Document):
             frappe.throw(title="Error", msg="This file does not exist")
 
         if COMPANY == "tor":
-            processExcelTorDrink(filepath=filepath)
+            processExcelTorDrink(
+                filepath=filepath, default_shift_type=self.default_shift_type
+            )
             frappe.msgprint("Checkins Completed")
         elif COMPANY == "nakorn":
-            processExcelNakorn(filepath=filepath)
+            processExcelNakorn(
+                filepath=filepath, default_shift_type=self.default_shift_type
+            )
         else:
             frappe.throw("Error in setting company logic.")
 
