@@ -1,16 +1,15 @@
 import pandas as pd
 from nr.nr_utils.checkin import createCheckin
 
-
 def formatExcelP1(row):
     name = row["ชื่อ-นามสกุล"]
-    id = row["รหัสที่เครื่อง"]
+    id = name
     dateStr = row["Date"]
     sp = dateStr.split("/")
     day = sp[0]
     month = sp[1]
-    year = int(sp[2]) - 543
-    times = row.iloc[5:].dropna()
+    year = int(sp[2])
+    times = row.iloc[3:].dropna()
     if len(times) == 0:
         return pd.Series({"name": name, "id": id, "min": pd.NaT, "max": pd.NaT})
     times = times.apply(
@@ -34,8 +33,10 @@ def formatExcelP2(row):
     return pd.DataFrame.from_records(datas)
 
 
-def processExcelTorDrink(filepath):
-    dft = pd.read_excel(filepath)
+def processExcelNakorn(filepath):
+    sheetname = 'รายวัน'
+    skiprows = 1
+    dft = pd.read_excel(filepath, sheet_name=sheetname, skiprows=skiprows)
     df1 = dft.iloc[:, :].apply(formatExcelP1, axis=1)
     df1.dropna(inplace=True)
     df1.rename(columns={"min": "IN", "max": "OUT"}, inplace=True)

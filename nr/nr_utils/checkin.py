@@ -1,7 +1,7 @@
 import frappe
-from frappe.utils import getdate, today, add_to_date
 from datetime import datetime
 from dateutil.parser import parse
+from nr.nr_utils.employee import findEmployee, createEmployee
 
 
 def createOrUpdateEmployeeNameFromAttnDeviceID(attendance_device_id):
@@ -13,47 +13,33 @@ def createOrUpdateEmployeeNameFromAttnDeviceID(attendance_device_id):
         },
     )
 
-    nameFromFirstName = frappe.db.exists(
-        "Employee",
-        {
-            "first_name": attendance_device_id,
-        },
-    )
+    nameFromSearch = findEmployee(attendance_device_id)
 
     emp_name = None
+    emp_first_name = None
 
     if nameFromADID:
         # Found user with ADID
         emp_name = nameFromADID
+        emp_first_name = frappe.db.get_value("Employee", emp_name, "first_name")
     else:
-        if nameFromFirstName:
+        if nameFromSearch:
             # User found without ADID, add one
             frappe.db.set_value(
                 "Employee",
-                nameFromFirstName,
+                nameFromSearch,
                 "attendance_device_id",
                 attendance_device_id,
             )
-            emp_name = nameFromFirstName
+            emp_name = nameFromSearch
+            emp_first_name = nameFromSearch
         else:
             # No user found, create user with random info
-            todayDT = getdate(today())
-            date_of_joining = add_to_date(todayDT, years=-1)
-            date_of_birth = add_to_date(todayDT, years=-30)
-            newEmp = frappe.get_doc(
-                {
-                    "doctype": "Employee",
-                    "first_name": attendance_device_id,
-                    "attendance_device_id": attendance_device_id,
-                    "date_of_joining": date_of_joining,
-                    "date_of_birth": date_of_birth,
-                    "gender": "Male",
-                }
+            emp_name, emp_first_name = createEmployee(
+                fullname=attendance_device_id, attendance_device_id=attendance_device_id
             )
-            doc = newEmp.insert()
-            emp_name = doc.name
 
-    return emp_name
+    return emp_name, emp_first_name
 
 
 def date_parse(string, agnostic=True, **kwargs):
@@ -79,7 +65,9 @@ def createCheckin(attendance_device_id, log_type, time, device_id="DEFAULT"):
         except:
             frappe.throw("Cannot parse date string.")
 
-    emp_name = createOrUpdateEmployeeNameFromAttnDeviceID(attendance_device_id)
+    emp_name, emp_first_name = createOrUpdateEmployeeNameFromAttnDeviceID(
+        attendance_device_id
+    )
 
     isCheckin = frappe.db.exists(
         "Employee Checkin",
@@ -90,7 +78,7 @@ def createCheckin(attendance_device_id, log_type, time, device_id="DEFAULT"):
         },
     )
     if isCheckin:
-        frappe.msgprint(f"Already check in: {emp_name} @ {time} ({log_type})")
+        frappe.msgprint(f"Already check in: {emp_first_name} @ {time} ({log_type})")
     else:
         newCheckin = frappe.get_doc(
             {
@@ -102,6 +90,6 @@ def createCheckin(attendance_device_id, log_type, time, device_id="DEFAULT"):
             }
         )
         newCheckin.insert(ignore_if_duplicate=True)
-        frappe.msgprint(f"Checkin successfully: {emp_name} @ {time} ({log_type})")
+        frappe.msgprint(f"Checkin successfully: {emp_first_name} @ {time} ({log_type})")
 
     return None

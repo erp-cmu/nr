@@ -4,6 +4,7 @@
 import frappe, os
 from frappe.model.document import Document
 from nr.nr_company.tor import processExcelTorDrink
+from nr.nr_company.nakorn import processExcelNakorn
 
 
 class NRCheckinImport(Document):
@@ -11,7 +12,7 @@ class NRCheckinImport(Document):
     def run_checkins(self):
         COMPANY = frappe.conf.NR_COMPANY
         if not COMPANY:
-            frappe.throw("Error getting company name settings")
+            frappe.throw("No NR_COMPANY value. Specify NR_COMPANY in site_config.json")
 
         if not self.excel:
             frappe.throw(title="Error", msg="No file")
@@ -23,11 +24,13 @@ class NRCheckinImport(Document):
         if COMPANY == "tor":
             processExcelTorDrink(filepath=filepath)
             frappe.msgprint("Checkins Completed")
+        elif COMPANY == "nakorn":
+            processExcelNakorn(filepath=filepath)
         else:
             frappe.throw("Error in setting company logic.")
 
     def after_insert(self):
         self.run_checkins()
 
-    def on_change(self):
-        self.run_checkins()
+    # def on_change(self):
+    #     self.run_checkins()
