@@ -1,0 +1,49 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-03-21 04:58:27.192765",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_5g4u",
+  "excel"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_5g4u",
+   "fieldtype": "Section Break",
+   "label": "Break"
+  },
+  {
+   "fieldname": "excel",
+   "fieldtype": "Attach",
+   "in_list_view": 1,
+   "label": "Excel",
+   "reqd": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-03-21 04:59:19.609984",
+ "modified_by": "Administrator",
+ "module": "NR",
+ "name": "NR Item Import",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
