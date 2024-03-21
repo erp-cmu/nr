@@ -1,7 +1,7 @@
 import frappe
 import unittest
-from nr.nr_utils.item import createItem, createUOM, createWarehouse, createItemGroup
-
+from nr.nr_utils.item import createItem, createUOM, createItemGroup
+from nr.nr_utils.warehouse import getOrCreateWarehouse
 import random
 from datetime import datetime
 
@@ -29,10 +29,10 @@ class TestEvent(unittest.TestCase):
         uom_name = "AAA"
         uom_name_pk = createUOM(uom_name=uom_name)
 
-        parent_warehouse_pk = createWarehouse(
+        parent_warehouse_pk = getOrCreateWarehouse(
             "Test", parent_warehouse=None, is_group=True
         )
-        warehouse_pk = createWarehouse(
+        warehouse_pk = getOrCreateWarehouse(
             "CCC",
             parent_warehouse=parent_warehouse_pk,
         )
