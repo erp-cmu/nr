@@ -4,7 +4,7 @@ from nr.nr_utils.item import createItem, createUOM, createItemGroup
 from nr.nr_utils.warehouse import getOrCreateWarehouse
 import random
 from datetime import datetime
-
+from nr.nr_utils.stock_entry import createStockEntry, createStockEntryItemDict
 
 def create_events():
     if frappe.flags.test_events_created:
@@ -32,6 +32,7 @@ class TestEvent(unittest.TestCase):
         parent_warehouse_pk = getOrCreateWarehouse(
             "Test", parent_warehouse=None, is_group=True
         )
+
         warehouse_pk = getOrCreateWarehouse(
             "CCC",
             parent_warehouse=parent_warehouse_pk,
@@ -45,5 +46,16 @@ class TestEvent(unittest.TestCase):
             item_group=item_group_name_pk,
             stock_uom=uom_name_pk,
             opening_stock=10,
+        )        
+        qty = 101
+        itemDict = createStockEntryItemDict(
+            item_code=item_code,
+            qty=qty,
         )
+        itemsDict = [itemDict]
+
+        createStockEntry(
+            itemsDict=itemsDict, to_warehouse=warehouse_pk, item_inout="IN"
+        )
+ 
         self.assertIsNone(None)
