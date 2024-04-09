@@ -1,4 +1,7 @@
 import frappe
+import pandas as pd
+
+
 
 
 def createUOM(uom_name, must_be_whole_number=False):
@@ -37,7 +40,7 @@ def createItemGroup(
     return doc.name
 
 
-def createItem(
+def createOrGetItem(
     item_code,
     item_name,
     item_group,

@@ -1,9 +1,7 @@
 import frappe
 import unittest
-from nr.nr_utils.item import createItem, createUOM, createItemGroup
+from nr.nr_utils.item import createOrGetItem, createUOM, createItemGroup
 from nr.nr_utils.warehouse import getOrCreateWarehouse
-import random
-from datetime import datetime
 from nr.nr_utils.stock_entry import createStockEntry, createStockEntryItemDict
 
 def create_events():
@@ -40,7 +38,7 @@ class TestEvent(unittest.TestCase):
 
         item_code = "ITEM001"
         item_name = "ITEMNAME001"
-        createItem(
+        createOrGetItem(
             item_code=item_code,
             item_name=item_name,
             item_group=item_group_name_pk,
