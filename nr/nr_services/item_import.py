@@ -2,51 +2,47 @@ import frappe
 import pandas as pd
 
 from nr_utils.warehouse import getOrCreateWarehouse
-from nr_utils.item import createOrGetItem
+from nr_utils.item import createOrGetItem, createItemGroup, createUOM
 from nr_utils.stock_entry import createStockEntryItemDict, createStockEntry
 
 
-def processExcelItemFn(row):
+def processExcelItemRowFn(row):
 
-    
-    item_group_name = "GGG"
+    item_group_name = row["item_group"]
     item_group_name_pk = createItemGroup(item_group_name=item_group_name)
 
-    uom_name = "AAA"
+    uom_name = row["uom"]
     uom_name_pk = createUOM(uom_name=uom_name)
 
-    parent_warehouse_pk = getOrCreateWarehouse(
-        "Test", parent_warehouse=None, is_group=True
-    )
+    warehouse_name = row["warehouse"]
+    warehouse_name_pk = getOrCreateWarehouse(warehouse_name)
 
-    warehouse_pk = getOrCreateWarehouse(
-        "CCC",
-        parent_warehouse=parent_warehouse_pk,
-    )
-
-    item_code = "ITEM001"
-    item_name = "ITEMNAME001"
+    item_code = row["item_code"]
+    item_name = row["item_name"]
+    
     createOrGetItem(
         item_code=item_code,
         item_name=item_name,
         item_group=item_group_name_pk,
         stock_uom=uom_name_pk,
-        opening_stock=10,
+        opening_stock=0,
     )        
-    qty = 101
-    itemDict = createStockEntryItemDict(
-        item_code=item_code,
-        qty=qty,
-    )
-    itemsDict = [itemDict]
 
-    createStockEntry(
-        itemsDict=itemsDict, to_warehouse=warehouse_pk, item_inout="IN"
-    )
+    qty = row["opening_stock"]
+    if qty > 0:
+        itemDict = createStockEntryItemDict(
+            item_code=item_code,
+            qty=qty,
+        )
+        itemsDict = [itemDict]
+        createStockEntry(
+            itemsDict=itemsDict, to_warehouse=warehouse_name_pk, item_inout="IN"
+        )
+    return None
 
 
 
-def processExcelItem(filepath):    
+def processExcelItemFile(filepath):    
     
     defaultItemGroup = "DEFAULT"
     defaultValuationRate = 0.01
@@ -88,4 +84,5 @@ def processExcelItem(filepath):
     else:
         df["uom"] = "nos"
 
-
+    df.apply(processExcelItemRowFn, axis=1)
+    return df
