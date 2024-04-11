@@ -43,5 +43,5 @@ def createStockEntry(to_warehouse, itemsDict, item_inout, company=None):
 
     for item in itemsDict:
         _ = entryDoc.append("items", {**item})
-
+    print("--------add SE", to_warehouse_name_pk) 
     entryDoc.insert()

@@ -4,8 +4,7 @@
 # import frappe
 from frappe.model.document import Document
 import frappe, os
-from nr.nr_utils.item import createOrGetItem
-
+from  nr.nr_services.item_import import	processExcelItemFile
 
 class NRItemImport(Document):
 
@@ -15,7 +14,8 @@ class NRItemImport(Document):
 		filepath = frappe.get_site_path() + self.excel
 		if not os.path.exists(filepath):
 			frappe.throw(title="Error", msg="This file does not exist")
-		
+
+		processExcelItemFile(filepath=filepath)
 	
 	def after_insert(self):
 		self.run_import_item()

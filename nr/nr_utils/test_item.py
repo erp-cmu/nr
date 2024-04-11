@@ -1,6 +1,6 @@
 import frappe
 import unittest
-from nr.nr_utils.item import createOrGetItem, createUOM, createItemGroup
+from nr.nr_utils.item import createOrGetItem, createUOM, createOrGetItemGroup
 from nr.nr_utils.warehouse import getOrCreateWarehouse
 from nr.nr_utils.stock_entry import createStockEntry, createStockEntryItemDict
 
@@ -22,7 +22,7 @@ class TestEvent(unittest.TestCase):
     def test_item(self):
 
         item_group_name = "GGG"
-        item_group_name_pk = createItemGroup(item_group_name=item_group_name)
+        item_group_name_pk = createOrGetItemGroup(item_group_name=item_group_name)
 
         uom_name = "AAA"
         uom_name_pk = createUOM(uom_name=uom_name)

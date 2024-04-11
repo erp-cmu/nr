@@ -20,7 +20,7 @@ def createUOM(uom_name, must_be_whole_number=False):
     return doc.name
 
 
-def createItemGroup(
+def createOrGetItemGroup(
     item_group_name, parent_item_group="All Item Groups", is_group=False
 ):
 
@@ -51,11 +51,11 @@ def createOrGetItem(
     is_stock_item=True,
 ):
 
-    item_name_pk = frappe.db.exists("Item", {"item_code", item_code})
+    item_name_pk = frappe.db.exists("Item", {"item_code": item_code})
     if item_name_pk:
         return item_name_pk
 
-    item_name_pk = frappe.db.exists("Item", {"item_name", item_name})
+    item_name_pk = frappe.db.exists("Item", {"item_name": item_name})
     if item_name_pk:
         return item_name_pk
 
