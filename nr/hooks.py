@@ -4,8 +4,7 @@ app_publisher = "IECMU"
 app_description = "Custom functionality"
 app_email = "erp@iecmu.com"
 app_license = "mit"
-# required_apps = []
-
+required_apps = ["erpnext", "hrms"]
 # Includes in <head>
 # ------------------
 
@@ -227,3 +226,4 @@ app_license = "mit"
 # 	"Logging DocType Name": 30  # days to retain logs
 # }
 
+fixtures = [{"doctype": "Custom Field", "filters": [["module", "=", "NR"]]}]
