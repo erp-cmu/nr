@@ -4,9 +4,9 @@ from nr.nr_utils.common import date_parse
 from datetime import datetime
 
 
-def createSalesOrderItemDict(item_code, qty):
+def createSalesOrderItemDict(item_code, qty, rate):
 
-    item = dict(item_code=item_code, qty=qty, uom="Nos")
+    item = dict(item_code=item_code, qty=qty, uom="Nos", rate=rate)
 
     return item
 
