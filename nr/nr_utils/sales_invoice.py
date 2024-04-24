@@ -1,13 +1,14 @@
 import frappe
 
 
-def createSalesInvoiceItemDict():
-    pass
+def createSalesInvoiceItemDict(item_code, qty, rate):
+
+    item = dict(item_code=item_code, qty=qty, uom="Nos", rate=rate)
+    return item
 
 
-def createSalesInvoice():
 
-    itemsDict = [{}]
+def createSalesInvoice(itemsDict):
 
     entryDoc = frappe.get_doc(
         {

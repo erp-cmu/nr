@@ -26,18 +26,18 @@ class TestSalesInvoice(unittest.TestCase):
 
     def test_sales_order(self):
 
-        # customer_name = "customer 4"
-        # item_code = "Item 4"
-        # rate = 300
-        # qty = 10
-        #
+        customer_name = "customer 4"
+        item_code = "Item 4"
+        rate = 300
+        qty = 10
+
         # now = datetime.now()
         # delivery_date = now.strftime("%Y-%m-%d")
         #
-        # customer_name_pk = getOrCreateCustomer(customer_name=customer_name)
-        # item_code_pk = getOrCreateItem(item_code=item_code, item_name=item_code)
-        # itemsDict = []
-        # item = createSalesOrderItemDict(item_code=item_code_pk, qty=qty, rate=rate)
-        # itemsDict.append(item)
-        #
-        createSalesInvoice()
+        customer_name_pk = getOrCreateCustomer(customer_name=customer_name)
+        item_code_pk = getOrCreateItem(item_code=item_code, item_name=item_code)
+        itemsDict = []
+        item = createSalesInvoiceItemDict(item_code=item_code_pk, qty=qty, rate=rate)
+        itemsDict.append(item)
+
+        createSalesInvoice(itemsDict=itemsDict)
