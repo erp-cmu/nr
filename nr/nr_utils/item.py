@@ -2,9 +2,7 @@ import frappe
 import pandas as pd
 
 
-
-
-def createUOM(uom_name, must_be_whole_number=False):
+def getOrCreateUOM(uom_name, must_be_whole_number=False):
 
     if frappe.db.exists("UOM", uom_name):
         return uom_name
@@ -20,7 +18,7 @@ def createUOM(uom_name, must_be_whole_number=False):
     return doc.name
 
 
-def createOrGetItemGroup(
+def getOrCreateItemGroup(
     item_group_name, parent_item_group="All Item Groups", is_group=False
 ):
 
@@ -40,11 +38,11 @@ def createOrGetItemGroup(
     return doc.name
 
 
-def createOrGetItem(
+def getOrCreateItem(
     item_code,
     item_name,
-    item_group,
-    stock_uom,
+    item_group="Products",
+    stock_uom="Nos",
     opening_stock=0,
     valuation_rate=0.01,
     allow_negative_stock=False,

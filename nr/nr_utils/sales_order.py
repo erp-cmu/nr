@@ -14,7 +14,6 @@ def createSalesOrderItemDict(item_code, qty, rate):
 def getOrCreateSaleOrder(customer_name, delivery_date, itemsDict):
 
     customer_name_pk = getOrCreateCustomer(customer_name)
-    print(customer_name_pk)
 
     if (type(delivery_date) is not datetime) and (type(delivery_date) is not str):
         frappe.throw("Please use datetime or string for time.")
@@ -30,6 +29,7 @@ def getOrCreateSaleOrder(customer_name, delivery_date, itemsDict):
             "doctype": "Sales Order",
             "customer": customer_name_pk,
             "delivery_date": delivery_date,
+            "docstatus": 1,
         }
     )
     for item in itemsDict:

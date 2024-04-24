@@ -2,25 +2,25 @@ import frappe
 import pandas as pd
 
 from nr.nr_utils.warehouse import getOrCreateWarehouse
-from nr.nr_utils.item import createOrGetItem, createOrGetItemGroup, createUOM
+from nr.nr_utils.item import getOrCreateItem, getOrCreateItemGroup, getOrCreateUOM
 from nr.nr_utils.stock_entry import createStockEntryItemDict, createStockEntry
 
 
 def processExcelItemRowFn(row):
-    print('------------here--------------')
+    print("------------here--------------")
     item_group_name = row["item_group"]
-    item_group_name_pk = createOrGetItemGroup(item_group_name=item_group_name)
+    item_group_name_pk = getOrCreateItemGroup(item_group_name=item_group_name)
 
     uom_name = row["uom"]
-    uom_name_pk = createUOM(uom_name=uom_name)
+    uom_name_pk = getOrCreateUOM(uom_name=uom_name)
 
     warehouse_name = row["warehouse"]
     warehouse_name_pk = getOrCreateWarehouse(warehouse_name)
-    print('----------herew---------', warehouse_name_pk)
+    print("----------herew---------", warehouse_name_pk)
     item_code = row["item_code"]
     item_name = row["item_name"]
 
-    item_code_temp = createOrGetItem(
+    item_code_temp = getOrCreateItem(
         item_code=item_code,
         item_name=item_name,
         item_group=item_group_name_pk,
@@ -28,7 +28,7 @@ def processExcelItemRowFn(row):
         opening_stock=0,
     )
 
-    print('------------here2--------------', item_code_temp)
+    print("------------here2--------------", item_code_temp)
 
     qty = row["opening_stock"]
     if qty > 0:
@@ -42,13 +42,15 @@ def processExcelItemRowFn(row):
         )
     return None
 
+
 def processExcelWarehouse(row):
     warehouse_name = row["warehouse"]
     warehouse_name_pk = getOrCreateWarehouse(warehouse_name)
     return warehouse_name_pk
 
-def processExcelItemFile(filepath):    
-    
+
+def processExcelItemFile(filepath):
+
     defaultItemGroup = "DEFAULT"
     defaultValuationRate = 0.01
     defaultWarehouse = "Store"
@@ -57,7 +59,7 @@ def processExcelItemFile(filepath):
     cols = dft.columns.values
 
     # Check requred columns
-    colsReg = ["item_code", "item_name"]   
+    colsReg = ["item_code", "item_name"]
     for c in colsReg:
         if c not in cols:
             frappe.throw(title="Error", msg=f"Missing {c} column.")
@@ -78,7 +80,7 @@ def processExcelItemFile(filepath):
         df["opening_stock"] = dft["opening_stock"].fillna(0)
     else:
         df["opening_stock"] = 0
-    
+
     if "warehouse" in cols:
         df["warehouse"] = dft["warehouse"].fillna(defaultWarehouse)
     else:
