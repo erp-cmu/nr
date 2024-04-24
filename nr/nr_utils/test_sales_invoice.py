@@ -24,20 +24,27 @@ class TestSalesInvoice(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def test_sales_order(self):
+    def test_sales_invoice(self):
 
+        sales_order_pk = "SAL-ORD-2024-00001"
         customer_name = "customer 4"
-        item_code = "Item 4"
+        item_code = "Item 5"
         rate = 300
         qty = 10
 
-        # now = datetime.now()
-        # delivery_date = now.strftime("%Y-%m-%d")
+        now = datetime.now()
+        due_date = now.strftime("%Y-%m-%d")
         #
         customer_name_pk = getOrCreateCustomer(customer_name=customer_name)
         item_code_pk = getOrCreateItem(item_code=item_code, item_name=item_code)
         itemsDict = []
-        item = createSalesInvoiceItemDict(item_code=item_code_pk, qty=qty, rate=rate)
+        item = createSalesInvoiceItemDict(
+            item_code=item_code_pk, qty=qty, rate=rate, sales_order=sales_order_pk
+        )
         itemsDict.append(item)
-
-        createSalesInvoice(itemsDict=itemsDict)
+        #
+        createSalesInvoice(
+            itemsDict=itemsDict, due_date=due_date, customer_name=customer_name_pk
+        )
+        #
+        self.assertIsNone(None)
