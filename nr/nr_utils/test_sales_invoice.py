@@ -31,12 +31,23 @@ class TestSalesInvoice(unittest.TestCase):
         item_code = "Item 5"
         rate = 300
         qty = 10
-
         now = datetime.now()
         due_date = now.strftime("%Y-%m-%d")
-        #
+        delivery_date = due_date
         customer_name_pk = getOrCreateCustomer(customer_name=customer_name)
         item_code_pk = getOrCreateItem(item_code=item_code, item_name=item_code)
+
+        # Create sales order
+        itemsDict = []
+        item = createSalesOrderItemDict(item_code=item_code_pk, qty=qty, rate=rate)
+        itemsDict.append(item)
+        sales_order_pk = createSalesOrder(
+            customer_name=customer_name_pk,
+            delivery_date=delivery_date,
+            itemsDict=itemsDict,
+        )
+
+        # Create sales invoice
         itemsDict = []
         item = createSalesInvoiceItemDict(
             item_code=item_code_pk, qty=qty, rate=rate, sales_order=sales_order_pk

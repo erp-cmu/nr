@@ -11,7 +11,7 @@ def createSalesOrderItemDict(item_code, qty, rate):
     return item
 
 
-def getOrCreateSaleOrder(customer_name, delivery_date, itemsDict):
+def createSalesOrder(customer_name, delivery_date, itemsDict):
 
     customer_name_pk = getOrCreateCustomer(customer_name)
 
@@ -35,4 +35,4 @@ def getOrCreateSaleOrder(customer_name, delivery_date, itemsDict):
     for item in itemsDict:
         _ = entryDoc.append("items", {**item})
     entryDoc.insert()
-    pass
+    return entryDoc.name
