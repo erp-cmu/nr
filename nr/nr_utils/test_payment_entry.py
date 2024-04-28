@@ -26,5 +26,5 @@ class TestPaymentEntry(unittest.TestCase):
         pass
 
     def test_payment_entry(self):
-        createPaymentEntryReceive("Customer 5")
+        createPaymentEntryReceive(customer_name="Customer 5")
         pass
