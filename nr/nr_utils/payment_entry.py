@@ -3,9 +3,12 @@ from nr.nr_utils.customer import getOrCreateCustomer
 from nr.nr_utils.account import getAccountPK
 
 
-def createPaymentReferencesItemDict(reference_name):
+def createPaymentReferencesItemDict(reference_name, total_amount, allocated_amount):
+    
+    account_pk = getAccountPK(name="Debtors")
+    reference_doctype = "Sales Invoice"
 
-    item = dict(reference_name=reference_name)
+    item = dict(reference_name=reference_name, reference_doctype=reference_doctype, total_amount=total_amount, allocated_amount=allocated_amount, account=account_pk)
     return item
 
 
@@ -51,7 +54,7 @@ def createPaymentEntryReceive(customer_name, received_amount, itemsDict):
     )
 
     for item in itemsDict:
-        _ = entryDoc.append("items", {**item})
+        _ = entryDoc.append("references", {**item})
 
     entryDoc.insert()
 

@@ -26,7 +26,6 @@ class TestSalesInvoice(unittest.TestCase):
 
     def test_sales_invoice(self):
 
-        sales_order_pk = "SAL-ORD-2024-00001"
         customer_name = "customer 4"
         item_code = "Item 5"
         rate = 300

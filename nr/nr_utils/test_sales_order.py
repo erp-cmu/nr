@@ -39,7 +39,7 @@ class TestSalesOrder(unittest.TestCase):
         item = createSalesOrderItemDict(item_code=item_code_pk, qty=qty, rate=rate)
         itemsDict.append(item)
 
-        getOrCreateSaleOrder(
+        createSalesOrder(
             customer_name=customer_name_pk,
             delivery_date=delivery_date,
             itemsDict=itemsDict,

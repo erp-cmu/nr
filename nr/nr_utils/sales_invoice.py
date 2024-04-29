@@ -37,5 +37,6 @@ def createSalesInvoice(itemsDict, due_date, customer_name):
         _ = entryDoc.append("items", {**item})
     #
     entryDoc.insert()
+    
+    return entryDoc.name
 
-    pass
