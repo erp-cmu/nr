@@ -1,6 +1,7 @@
 import frappe
 from nr.nr_utils.customer import getOrCreateCustomer
 from nr.nr_utils.account import getAccountPK
+from datetime import datetime
 
 
 def createPaymentReferencesItemDict(reference_name, total_amount, allocated_amount):
@@ -42,11 +43,11 @@ def createPaymentEntryReceive(
     paid_amount = received_amount
 
     if not reference_date:
-        # TODO: Change this to automatic
-        reference_date = "2024-04-28"
+        now = datetime.now()
+        reference_date = now.strftime("%Y-%m-%d")
 
     if not reference_no:
-        reference_no = "NO_REFERENCE_NO_SPECIFIED"
+        reference_no = "REFERENCE_NO"
 
     # Constructing doc
     entryDoc = frappe.get_doc(

@@ -26,15 +26,17 @@ class TestPaymentEntry(unittest.TestCase):
         pass
 
     def test_payment_entry(self):
-        customer_name = "customer 6"
-        item_code = "Item 6"
+        customer_name = "customer 8"
+        item_code = "Item 8"
         rate = 1000
         qty = 10
         now = datetime.now()
         due_date = now.strftime("%Y-%m-%d")
         delivery_date = due_date
         customer_name_pk = getOrCreateCustomer(customer_name=customer_name)
-        item_code_pk = getOrCreateItem(item_code=item_code, item_name=item_code)
+        item_code_pk = getOrCreateItem(
+            item_code=item_code, item_name=item_code, allow_negative_stock=True
+        )
 
         # Create sales order
         itemsDict = []
@@ -56,9 +58,24 @@ class TestPaymentEntry(unittest.TestCase):
         sales_invoice_pk = createSalesInvoice(
             itemsDict=itemsDict, due_date=due_date, customer_name=customer_name_pk
         )
+
+        # Create payment entry
         total_amount = rate * qty
         itemsDict = []
-        item = createPaymentReferencesItemDict(reference_name=sales_invoice_pk, total_amount=total_amount, allocated_amount=total_amount)
+        item = createPaymentReferencesItemDict(
+            reference_name=sales_invoice_pk,
+            total_amount=total_amount,
+            allocated_amount=total_amount,
+        )
         itemsDict.append(item)
-        createPaymentEntryReceive(customer_name=customer_name_pk, received_amount=total_amount, itemsDict=itemsDict)
+        createPaymentEntryReceive(
+            customer_name=customer_name_pk,
+            received_amount=total_amount,
+            itemsDict=itemsDict,
+        )
+
+        # Update status
+        updateSalesOrderStatus(
+            sales_order_name=sales_order_pk, is_billed=True, is_delivered=False
+        )
         pass
