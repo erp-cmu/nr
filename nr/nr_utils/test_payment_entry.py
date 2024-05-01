@@ -26,22 +26,31 @@ class TestPaymentEntry(unittest.TestCase):
         pass
 
     def test_payment_entry(self):
-        customer_name = "customer 8"
-        item_code = "Item 8"
-        rate = 1000
-        qty = 10
+        # Input
+        customer_name = "customer 2"
+        itemsArray = [
+            dict(item_code="ITEM001", item_name="Item 1", rate=300, qty=10),
+            dict(item_code="ITEM002", item_name="Item 2", rate=200, qty=20),
+        ]
         now = datetime.now()
+        delivery_date = now.strftime("%Y-%m-%d")
         due_date = now.strftime("%Y-%m-%d")
-        delivery_date = due_date
+
+        # Logic
         customer_name_pk = getOrCreateCustomer(customer_name=customer_name)
-        item_code_pk = getOrCreateItem(
-            item_code=item_code, item_name=item_code, allow_negative_stock=True
-        )
 
         # Create sales order
         itemsDict = []
-        item = createSalesOrderItemDict(item_code=item_code_pk, qty=qty, rate=rate)
-        itemsDict.append(item)
+        for itemsArrayEle in itemsArray:
+            item_code = itemsArrayEle["item_code"]
+            item_name = itemsArrayEle["item_name"]
+            rate = itemsArrayEle["rate"]
+            qty = itemsArrayEle["qty"]
+            item_code_pk = getOrCreateItem(
+                item_code=item_code, item_name=item_name, allow_negative_stock=True
+            )
+            item = createSalesOrderItemDict(item_code=item_code_pk, qty=qty, rate=rate)
+            itemsDict.append(item)
         sales_order_pk = createSalesOrder(
             customer_name=customer_name_pk,
             delivery_date=delivery_date,
@@ -50,18 +59,42 @@ class TestPaymentEntry(unittest.TestCase):
 
         # Create sales invoice
         itemsDict = []
-        item = createSalesInvoiceItemDict(
-            item_code=item_code_pk, qty=qty, rate=rate, sales_order=sales_order_pk
-        )
-        itemsDict.append(item)
+        for itemsArrayEle in itemsArray:
+
+            item_code = itemsArrayEle["item_code"]
+            item_name = itemsArrayEle["item_name"]
+            rate = itemsArrayEle["rate"]
+            qty = itemsArrayEle["qty"]
+
+            item_code_pk = getOrCreateItem(
+                item_code=item_code, item_name=item_name, allow_negative_stock=True
+            )
+            so_detail = getSalesOrderItem(
+                sales_order_name=sales_order_pk, item_code=item_code_pk
+            )
+
+            item = createSalesInvoiceItemDict(
+                item_code=item_code_pk,
+                qty=qty,
+                rate=rate,
+                sales_order=sales_order_pk,
+                so_detail=so_detail,
+            )
+            itemsDict.append(item)
         #
         sales_invoice_pk = createSalesInvoice(
             itemsDict=itemsDict, due_date=due_date, customer_name=customer_name_pk
         )
 
         # Create payment entry
-        total_amount = rate * qty
         itemsDict = []
+        total_amount = 0
+        for itemsArrayEle in itemsArray:
+            rate = itemsArrayEle["rate"]
+            qty = itemsArrayEle["qty"]
+            total_amount = total_amount + rate * qty
+
+        # We only need to create one payment reference to sales invoice (even for multiple items).
         item = createPaymentReferencesItemDict(
             reference_name=sales_invoice_pk,
             total_amount=total_amount,

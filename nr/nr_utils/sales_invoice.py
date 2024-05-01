@@ -4,11 +4,16 @@ from nr.nr_utils.common import date_parse
 from nr.nr_utils.customer import getOrCreateCustomer
 
 
-def createSalesInvoiceItemDict(item_code, qty, rate, sales_order):
+def createSalesInvoiceItemDict(
+    item_code, qty, rate, sales_order=None, so_detail=None, uom="Nos"
+):
 
-    item = dict(
-        item_code=item_code, qty=qty, uom="Nos", rate=rate, sales_order=sales_order
-    )
+    item = dict(item_code=item_code, qty=qty, uom=uom, rate=rate)
+
+    if sales_order and so_detail:
+        item["sales_order"] = sales_order
+        item["so_detail"] = so_detail
+
     return item
 
 

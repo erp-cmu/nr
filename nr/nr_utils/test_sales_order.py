@@ -1,4 +1,4 @@
-# tbench --site mysite run-tests --module "nr.nr_utils.test_sales_order"
+# bench --site mysite run-tests --module "nr.nr_utils.test_sales_order"
 
 import frappe
 import unittest
@@ -25,26 +25,33 @@ class TestSalesOrder(unittest.TestCase):
 
     def test_sales_order(self):
 
+        # Input
         customer_name = "customer 2"
-        itemsInfo = [dict(item_code="ITEM001", item_name="Item 1", rate=300, qty=10)]
-        item_code = "Item 2"
-        rate = 300
-        qty = 10
-
+        itemsArray = [
+            dict(item_code="ITEM001", item_name="Item 1", rate=300, qty=10),
+            dict(item_code="ITEM002", item_name="Item 2", rate=200, qty=20),
+        ]
         now = datetime.now()
         delivery_date = now.strftime("%Y-%m-%d")
 
+        # Logic
         customer_name_pk = getOrCreateCustomer(customer_name=customer_name)
-        item_code_pk = getOrCreateItem(
-            item_code=item_code, item_name=item_code, allow_negative_stock=True
-        )
         itemsDict = []
-        item = createSalesOrderItemDict(item_code=item_code_pk, qty=qty, rate=rate)
-        itemsDict.append(item)
+        for itemsArrayEle in itemsArray:
+            item_code = itemsArrayEle["item_code"]
+            item_name = itemsArrayEle["item_name"]
+            rate = itemsArrayEle["rate"]
+            qty = itemsArrayEle["qty"]
+            item_code_pk = getOrCreateItem(
+                item_code=item_code, item_name=item_name, allow_negative_stock=True
+            )
+            item = createSalesOrderItemDict(item_code=item_code_pk, qty=qty, rate=rate)
+            itemsDict.append(item)
 
-        createSalesOrder(
+        sales_order_pk = createSalesOrder(
             customer_name=customer_name_pk,
             delivery_date=delivery_date,
             itemsDict=itemsDict,
         )
+        print(sales_order_pk)
         self.assertIsNone(None)
