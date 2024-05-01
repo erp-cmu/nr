@@ -68,28 +68,35 @@ def updateSalesOrderStatus(sales_order_name, is_billed, is_delivered):
     if not sales_order_name_pk:
         frappe.throw(msg="Cannot find sales order.")
 
+    # NOTE: For some reason, the initial values are not correct, so I am going to specify all the values myself and not rely on the current values.
     # Retrieve current status
-    curSO = frappe.db.get_value("Sales Order", sales_order_name_pk, ["*"], as_dict=True)
-    status = curSO["status"]
-    billing_status = curSO["billing_status"]
-    delivery_status = curSO["delivery_status"]
-    per_billed = curSO["per_billed"]
-    per_delivered = curSO["per_delivered"]
+    # curSO = frappe.db.get_value("Sales Order", sales_order_name_pk, ["*"], as_dict=True)
+    # status = curSO["status"]
+    # billing_status = curSO["billing_status"]
+    # delivery_status = curSO["delivery_status"]
+    # per_billed = curSO["per_billed"]
+    # per_delivered = curSO["per_delivered"]
 
     # Takes care of billing and delivery status
     if is_billed:
         billing_status = "Fully Billed"
         per_billed = 100
+    else:
+        billing_status = "Not Billed"
+        per_billed = 0
+
     if is_delivered:
         delivery_status = "Fully Delivered"
         per_delivered = 100
+    else:
+        delivery_status = "Not Delivered"
+        per_delivered = 0
 
     # Takes care of status
     if is_billed and is_delivered:
         status = "Completed"
     elif is_billed and not is_delivered:
         status = "To Deliver"
-
     elif not is_billed and is_delivered:
         status = "To Bill"
     else:

@@ -27,7 +27,7 @@ class TestSalesInvoice(unittest.TestCase):
     def test_sales_invoice(self):
 
         # Input
-        customer_name = "customer 2"
+        customer_name = "Customer 2"
         itemsArray = [
             dict(item_code="ITEM001", item_name="Item 1", rate=300, qty=10),
             dict(item_code="ITEM002", item_name="Item 2", rate=200, qty=20),

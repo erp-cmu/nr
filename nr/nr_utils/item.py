@@ -44,7 +44,7 @@ def getOrCreateItem(
     item_group="Products",
     stock_uom="Nos",
     opening_stock=0,
-    valuation_rate=0.01,
+    valuation_rate=0.01,  # NOTE: I put non-zero number here so that the software can calculate valuation and does not complain when performing stock entry.
     allow_negative_stock=False,
     is_stock_item=True,
 ):
