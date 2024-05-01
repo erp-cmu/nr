@@ -37,6 +37,31 @@ def createSalesInvoice(itemsDict, due_date, customer_name):
         _ = entryDoc.append("items", {**item})
     #
     entryDoc.insert()
-    
+
     return entryDoc.name
 
+
+def getSalesInvoiceItem(sales_invoice_name, item_code):
+
+    sales_invoice_name_pk = frappe.db.exists(
+        "Sales Invoice", {"name": sales_invoice_name}
+    )
+    if not sales_invoice_name_pk:
+        frappe.throw(msg="Cannot find sales invoice.")
+
+    sales_invoice_item_name_pk = frappe.db.exists(
+        "Sales Invoice Item", {"parent": sales_invoice_name_pk, "item_code": item_code}
+    )
+    if sales_invoice_item_name_pk:
+        return sales_invoice_item_name_pk
+
+    sales_invoice_item_name_pk = frappe.db.exists(
+        "Sales Invoice Item", {"parent": sales_invoice_name_pk, "item_name": item_code}
+    )
+    if sales_invoice_item_name_pk:
+        return sales_invoice_item_name_pk
+
+    if not sales_invoice_item_name_pk:
+        frappe.throw(msg="Cannot find sales invoice item.")
+
+    return None

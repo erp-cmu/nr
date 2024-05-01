@@ -1,4 +1,4 @@
-# bench --site mysite run-tests --module "nr.nr_utils.test_sales_order"
+# tbench --site mysite run-tests --module "nr.nr_utils.test_sales_order"
 
 import frappe
 import unittest
@@ -25,8 +25,8 @@ class TestSalesOrder(unittest.TestCase):
 
     def test_sales_order(self):
 
-        customer_name = "customer 4"
-        item_code = "Item 4"
+        customer_name = "customer 2"
+        item_code = "Item 2"
         rate = 300
         qty = 10
 
@@ -34,7 +34,9 @@ class TestSalesOrder(unittest.TestCase):
         delivery_date = now.strftime("%Y-%m-%d")
 
         customer_name_pk = getOrCreateCustomer(customer_name=customer_name)
-        item_code_pk = getOrCreateItem(item_code=item_code, item_name=item_code)
+        item_code_pk = getOrCreateItem(
+            item_code=item_code, item_name=item_code, allow_negative_stock=True
+        )
         itemsDict = []
         item = createSalesOrderItemDict(item_code=item_code_pk, qty=qty, rate=rate)
         itemsDict.append(item)

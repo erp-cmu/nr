@@ -38,6 +38,30 @@ def createSalesOrder(customer_name, delivery_date, itemsDict):
     return entryDoc.name
 
 
+def getSalesOrderItem(sales_order_name, item_code):
+
+    sales_order_name_pk = frappe.db.exists("Sales Order", {"name": sales_order_name})
+    if not sales_order_name_pk:
+        frappe.throw(msg="Cannot find sales order.")
+
+    sales_order_item_name_pk = frappe.db.exists(
+        "Sales Order Item", {"parent": sales_order_name_pk, "item_code": item_code}
+    )
+    if sales_order_item_name_pk:
+        return sales_order_item_name_pk
+
+    sales_order_item_name_pk = frappe.db.exists(
+        "Sales Order Item", {"parent": sales_order_name_pk, "item_name": item_code}
+    )
+    if sales_order_item_name_pk:
+        return sales_order_item_name_pk
+
+    if not sales_order_item_name_pk:
+        frappe.throw(msg="Cannot find sales order item.")
+
+    return None
+
+
 def updateSalesOrderStatus(sales_order_name, is_billed, is_delivered):
 
     sales_order_name_pk = frappe.db.exists("Sales Order", {"name": sales_order_name})
