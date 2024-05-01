@@ -1,5 +1,6 @@
 import frappe
 from nr.nr_utils.customer import getOrCreateCustomer
+from nr.nr_utils.common import date_parse
 
 
 def createDeliveryNoteItemDict(
@@ -25,17 +26,15 @@ def createDeliveryNoteItemDict(
     return item
 
 
-def createDeliveryNote(customer_name, itemsDict, posting_date="", posting_time=""):
+def createDeliveryNote(customer_name, itemsDict, posting_date):
 
-    posting_date = "2024-05-01"
-    posting_time = "08:10:00"
+    posting_date = date_parse(posting_date)
     customer_name_pk = getOrCreateCustomer(customer_name)
     entryDoc = frappe.get_doc(
         {
             "doctype": "Delivery Note",
             "customer": customer_name_pk,
             "posting_date": posting_date,
-            "posting_time": posting_time,
             "docstatus": 1,
         }
     )

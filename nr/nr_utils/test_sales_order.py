@@ -26,6 +26,7 @@ class TestSalesOrder(unittest.TestCase):
     def test_sales_order(self):
 
         customer_name = "customer 2"
+        itemsInfo = [dict(item_code="ITEM001", item_name="Item 1", rate=300, qty=10)]
         item_code = "Item 2"
         rate = 300
         qty = 10

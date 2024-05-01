@@ -34,6 +34,7 @@ class TestDeliveryNote(unittest.TestCase):
         now = datetime.now()
         due_date = now.strftime("%Y-%m-%d")
         delivery_date = due_date
+        posting_date = due_date
         customer_name_pk = getOrCreateCustomer(customer_name=customer_name)
         item_code_pk = getOrCreateItem(
             item_code=item_code, item_name=item_code, allow_negative_stock=True
@@ -61,7 +62,6 @@ class TestDeliveryNote(unittest.TestCase):
         )
 
         # Create delivery note
-
         itemsDict = []
         so_detail = getSalesOrderItem(
             sales_order_name=sales_order_pk, item_code=item_code_pk
@@ -79,7 +79,11 @@ class TestDeliveryNote(unittest.TestCase):
             si_detail=si_detail,
         )
         itemsDict.append(item)
-        createDeliveryNote(customer_name=customer_name, itemsDict=itemsDict)
+        createDeliveryNote(
+            customer_name=customer_name,
+            itemsDict=itemsDict,
+            posting_date=posting_date,
+        )
 
         # Update status
         # updateSalesOrderStatus(
