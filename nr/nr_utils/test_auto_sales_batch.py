@@ -24,31 +24,31 @@ class TestAutoSalesBatch(unittest.TestCase):
     def test_auto_sales_batch(self):
         # Input
         customer_name = "Customer 3"
-        # NOTE: I include options for valuation rate here.
         itemsArray = [
             dict(
                 item_code="ITEM005",
                 item_name="Item 5",
                 rate=300,
                 qty=10,
-                # valuation_rate=300,
             ),
             dict(
                 item_code="ITEM006",
                 item_name="Item 6",
                 rate=200,
                 qty=20,
-                # valuation_rate=200,
             ),
         ]
         now = datetime.now()
-        delivery_date = now.strftime("%Y-%m-%d")
-        due_date = now.strftime("%Y-%m-%d")
-        posting_date = now.strftime("%Y-%m-%d")
-        processAutoSale(
-            customer_name=customer_name,
-            itemsArray=itemsArray,
-            delivery_date=delivery_date,
-            due_date=due_date,
-            posting_date=posting_date,
-        )
+        dtNow = now.strftime("%Y-%m-%d")
+        delivery_date = dtNow
+        due_date = dtNow
+        posting_date = dtNow
+
+        for _ in range(3):
+            processAutoSale(
+                customer_name=customer_name,
+                itemsArray=itemsArray,
+                delivery_date=delivery_date,
+                due_date=due_date,
+                posting_date=posting_date,
+            )

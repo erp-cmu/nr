@@ -1,4 +1,4 @@
-# bench --site mysite run-tests --module "nr.nr_utils.test_auto_sales"
+# bench --site mysite run-tests --module "nr.nr_utils.test_auto_sales_logic"
 
 import frappe
 import unittest
