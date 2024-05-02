@@ -20,6 +20,22 @@ from nr.nr_utils.delivery_note import createDeliveryNote, createDeliveryNoteItem
 
 def processAutoSale(customer_name, itemsArray, delivery_date, due_date, posting_date):
     # NOTE: This process does not take into account valuation rate.
+    # Example of itemArray
+    # itemsArray = [
+    #     dict(
+    #         item_code="ITEM005",
+    #         item_name="Item 5",
+    #         rate=300,
+    #         qty=10,
+    #     ),
+    #     dict(
+    #         item_code="ITEM006",
+    #         item_name="Item 6",
+    #         rate=200,
+    #         qty=20,
+    #     ),
+    # ]
+
     customer_name_pk = getOrCreateCustomer(customer_name=customer_name)
 
     # Create sales order
