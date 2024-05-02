@@ -9,6 +9,7 @@ from nr.nr_utils.sales_order import (
     getSalesOrderItem,
     updateSalesOrderStatus,
     createSalesOrderItemDict,
+    checkCustomExternalSalesOrderID,
 )
 from nr.nr_utils.customer import getOrCreateCustomer
 from nr.nr_utils.payment_entry import (
@@ -16,6 +17,7 @@ from nr.nr_utils.payment_entry import (
     createPaymentReferencesItemDict,
 )
 from nr.nr_utils.delivery_note import createDeliveryNote, createDeliveryNoteItemDict
+import frappe
 
 
 def processAutoSale(
@@ -43,6 +45,14 @@ def processAutoSale(
     #         qty=20,
     #     ),
     # ]
+
+    # NOTE: skip this process if external id exists
+    id = checkCustomExternalSalesOrderID(id=custom_external_sales_order_id)
+    if id:
+        frappe.msgprint(
+            msg=f"Skip importing [{custom_external_sales_order_id}] due to duplicated external id in [{id}]."
+        )
+        return
 
     customer_name_pk = getOrCreateCustomer(customer_name=customer_name)
 

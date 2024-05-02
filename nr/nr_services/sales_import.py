@@ -14,15 +14,17 @@ def processSalesOrderGroup(dfg):
         "delivery_date",
         "customer_name",
     ]
-
-    dfd = dfg[colsDup].drop_duplicates()
+    dfd = dfg[colsDup].copy()
+    dfd = dfd.drop_duplicates()
 
     # If the dataframe does not have one row, this means the data is inconsistent.
     if dfd.shape[0] != 1:
         probID = dfd.iloc[0, :]["custom_external_sales_order_id"]
-        frappe.throw(msg=f"Found inconsistent data in {probID}")
+        frappe.msgprint(
+            msg=f"Found inconsistent data in [{probID}]. Using values from the first row."
+        )
 
-    row = dfg.iloc[0, :]
+    row = dfd.iloc[0, :]
     customer_name = row["customer_name"]
     delivery_date = row["delivery_date"]
     due_date = row["due_date"]
@@ -31,7 +33,7 @@ def processSalesOrderGroup(dfg):
     custom_sales_order_source = row["custom_sales_order_source"]
 
     itemsArray = []
-    for row in dfg:
+    for idx, row in dfg.iterrows():
         item = dict(
             item_code=row["item_code"],
             item_name=row["item_name"],
@@ -52,7 +54,15 @@ def processSalesOrderGroup(dfg):
 
 
 def processExcelAutoSalesFile(filepath):
-    dft = pd.read_excel(filepath)
+    dft = pd.read_excel(
+        filepath,
+        dtype={
+            "custom_external_sales_order_id": str,
+            "posting_date": "str",
+            "due_date": "str",
+            "delivery_date": "str",
+        },
+    )
     cols = dft.columns.values
 
     # Check requred columns
