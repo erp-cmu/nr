@@ -7,7 +7,6 @@ from nr.nr_utils.stock_entry import createStockEntryItemDict, createStockEntry
 
 
 def processExcelItemRowFn(row):
-    print("------------here--------------")
     item_group_name = row["item_group"]
     item_group_name_pk = getOrCreateItemGroup(item_group_name=item_group_name)
 
@@ -16,7 +15,6 @@ def processExcelItemRowFn(row):
 
     warehouse_name = row["warehouse"]
     warehouse_name_pk = getOrCreateWarehouse(warehouse_name)
-    print("----------herew---------", warehouse_name_pk)
     item_code = row["item_code"]
     item_name = row["item_name"]
 
@@ -27,8 +25,6 @@ def processExcelItemRowFn(row):
         stock_uom=uom_name_pk,
         opening_stock=0,
     )
-
-    print("------------here2--------------", item_code_temp)
 
     qty = row["opening_stock"]
     if qty > 0:
@@ -59,11 +55,11 @@ def processExcelItemFile(filepath):
     cols = dft.columns.values
 
     # Check requred columns
-    colsReg = ["item_code", "item_name"]
-    for c in colsReg:
+    colsReq = ["item_code", "item_name"]
+    for c in colsReq:
         if c not in cols:
             frappe.throw(title="Error", msg=f"Missing {c} column.")
-    df = dft[colsReg]
+    df = dft[colsReq]
 
     # Handle optional columns
     if "item_group" in cols:
