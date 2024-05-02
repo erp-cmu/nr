@@ -4,6 +4,15 @@ from nr.nr_utils.common import date_parse
 from datetime import datetime
 
 
+def checkCustomExternalSalesOrderID(id):
+    name = frappe.db.exists("Sales Order", {"custom_external_sales_order_id": id})
+
+    if name:
+        return name
+    else:
+        return None
+
+
 def createSalesOrderItemDict(item_code, qty, rate):
 
     item = dict(item_code=item_code, qty=qty, uom="Nos", rate=rate)
@@ -11,9 +20,32 @@ def createSalesOrderItemDict(item_code, qty, rate):
     return item
 
 
-def createSalesOrder(customer_name, delivery_date, itemsDict):
+def validateCustomSalesOrderSource(src):
+    if src not in ["OTHER", "INTERNAL", "LAZADA", "LINE_SHOP", "SHOPEE"]:
+        frappe.throw("Invalid custom sales order source")
+
+
+def createSalesOrder(
+    customer_name,
+    delivery_date,
+    itemsDict,
+    custom_external_sales_order_id,
+    custom_sales_order_source="OTHER",
+):
 
     customer_name_pk = getOrCreateCustomer(customer_name)
+
+    validateCustomSalesOrderSource(src=custom_sales_order_source)
+
+    # Make sure that user input unique custom_external_sales_order_id
+    if custom_sales_order_source != "INTERNAL":
+
+        if not custom_external_sales_order_id:
+            frappe.throw(msg="Custom external sales order ID is required.")
+
+        so = checkCustomExternalSalesOrderID(id=custom_external_sales_order_id)
+        if so:
+            frappe.throw(msg="Duplicated custom external sales order ID")
 
     if (type(delivery_date) is not datetime) and (type(delivery_date) is not str):
         frappe.throw("Please use datetime or string for time.")
@@ -29,6 +61,8 @@ def createSalesOrder(customer_name, delivery_date, itemsDict):
             "doctype": "Sales Order",
             "customer": customer_name_pk,
             "delivery_date": delivery_date,
+            "custom_external_sales_order_id": custom_external_sales_order_id,
+            "custom_sales_order_source": custom_sales_order_source,
             "docstatus": 1,
         }
     )

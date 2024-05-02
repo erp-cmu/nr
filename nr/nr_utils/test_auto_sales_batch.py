@@ -44,11 +44,12 @@ class TestAutoSalesBatch(unittest.TestCase):
         due_date = dtNow
         posting_date = dtNow
 
-        for _ in range(3):
+        for id in ["ID1", "ID2", "ID3"]:
             processAutoSale(
                 customer_name=customer_name,
                 itemsArray=itemsArray,
                 delivery_date=delivery_date,
                 due_date=due_date,
                 posting_date=posting_date,
+                custom_external_sales_order_id=id,
             )

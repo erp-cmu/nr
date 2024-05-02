@@ -29,6 +29,7 @@ class TestAutoSales(unittest.TestCase):
     def test_auto_sales(self):
         # Input
         customer_name = "Customer 3"
+        custom_external_sales_order_id = "CUSTOM701"
         # NOTE: I include options for valuation rate here.
         itemsArray = [
             dict(
@@ -74,6 +75,7 @@ class TestAutoSales(unittest.TestCase):
             customer_name=customer_name_pk,
             delivery_date=delivery_date,
             itemsDict=itemsDict,
+            custom_external_sales_order_id=custom_external_sales_order_id,
         )
 
         # Create sales invoice

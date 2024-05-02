@@ -28,6 +28,8 @@ class TestSalesInvoice(unittest.TestCase):
 
         # Input
         customer_name = "Customer 2"
+        # custom_sales_order_source = "OTHER"
+        custom_external_sales_order_id = "CUSTOM0001"
         itemsArray = [
             dict(item_code="ITEM001", item_name="Item 1", rate=300, qty=10),
             dict(item_code="ITEM002", item_name="Item 2", rate=200, qty=20),
@@ -55,6 +57,7 @@ class TestSalesInvoice(unittest.TestCase):
             customer_name=customer_name_pk,
             delivery_date=delivery_date,
             itemsDict=itemsDict,
+            custom_external_sales_order_id=custom_external_sales_order_id,
         )
 
         # Create sales invoice

@@ -18,7 +18,15 @@ from nr.nr_utils.payment_entry import (
 from nr.nr_utils.delivery_note import createDeliveryNote, createDeliveryNoteItemDict
 
 
-def processAutoSale(customer_name, itemsArray, delivery_date, due_date, posting_date):
+def processAutoSale(
+    customer_name,
+    itemsArray,
+    delivery_date,
+    due_date,
+    posting_date,
+    custom_external_sales_order_id,
+    custom_sales_order_source="OTHER",
+):
     # NOTE: This process does not take into account valuation rate.
     # Example of itemArray
     # itemsArray = [
@@ -56,6 +64,8 @@ def processAutoSale(customer_name, itemsArray, delivery_date, due_date, posting_
         customer_name=customer_name_pk,
         delivery_date=delivery_date,
         itemsDict=itemsDict,
+        custom_external_sales_order_id=custom_external_sales_order_id,
+        custom_sales_order_source=custom_sales_order_source,
     )
 
     # Create sales invoice
