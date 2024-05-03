@@ -52,6 +52,8 @@ def processSalesOrderGroup(dfg):
         custom_sales_order_source=custom_sales_order_source,
     )
 
+    frappe.db.commit()
+
 
 def processExcelAutoSalesFile(filepath):
     dft = pd.read_excel(
@@ -81,6 +83,9 @@ def processExcelAutoSalesFile(filepath):
     for c in colsReq:
         if c not in cols:
             frappe.throw(title="Error", msg=f"Missing {c} column.")
+
+    # Make sure customer name is clean
+    dft["customer_name"] = dft["customer_name"].str.strip().str.replace("  ", " ")
 
     dft["custom_sales_order_source"] = dft["custom_sales_order_source"].fillna("OTHER")
 
