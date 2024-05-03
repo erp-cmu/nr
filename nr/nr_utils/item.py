@@ -38,6 +38,17 @@ def getOrCreateItemGroup(
     return doc.name
 
 
+def getUOM(item_name):
+    stock_uom = frappe.db.get_value("Item", item_name, "stock_uom")
+    return stock_uom
+
+
+def makeUOMFractional(uom_name):
+    must_be_whole_number = frappe.db.get_value("UOM", uom_name, "must_be_whole_number")
+    if must_be_whole_number:
+        frappe.db.set_value("UOM", uom_name, "must_be_whole_number", 0)
+
+
 def getOrCreateItem(
     item_code,
     item_name,
@@ -51,11 +62,13 @@ def getOrCreateItem(
 
     item_name_pk = frappe.db.exists("Item", {"item_code": item_code})
     if item_name_pk:
-        return item_name_pk
+        return item_name_pk, getUOM(item_name_pk)
 
     item_name_pk = frappe.db.exists("Item", {"item_name": item_name})
     if item_name_pk:
-        return item_name_pk
+        return item_name_pk, getUOM(item_name_pk)
+
+    uom_name_pk = getOrCreateUOM(uom_name=stock_uom, must_be_whole_number=False)
 
     doc = frappe.get_doc(
         {
@@ -63,7 +76,7 @@ def getOrCreateItem(
             "item_code": item_code,
             "item_name": item_name,
             "item_group": item_group,
-            "stock_uom": stock_uom,
+            "stock_uom": uom_name_pk,
             "opening_stock": opening_stock,
             "valuation_rate": valuation_rate,
             "allow_negative_stock": allow_negative_stock,
@@ -71,4 +84,4 @@ def getOrCreateItem(
         },
     )
     doc.insert()
-    return doc.name
+    return doc.name, stock_uom

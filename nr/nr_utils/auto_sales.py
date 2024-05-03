@@ -3,7 +3,7 @@ from nr.nr_utils.sales_invoice import (
     createSalesInvoiceItemDict,
     getSalesInvoiceItem,
 )
-from nr.nr_utils.item import getOrCreateItem
+from nr.nr_utils.item import getOrCreateItem, makeUOMFractional
 from nr.nr_utils.sales_order import (
     createSalesOrder,
     getSalesOrderItem,
@@ -63,12 +63,16 @@ def processAutoSale(
         item_name = itemsArrayEle["item_name"]
         rate = itemsArrayEle["rate"]
         qty = itemsArrayEle["qty"]
-        item_code_pk = getOrCreateItem(
+
+        item_code_pk, uom_name = getOrCreateItem(
             item_code=item_code,
             item_name=item_name,
             allow_negative_stock=True,
         )
-        item = createSalesOrderItemDict(item_code=item_code_pk, qty=qty, rate=rate)
+
+        item = createSalesOrderItemDict(
+            item_code=item_code_pk, qty=qty, rate=rate, uom=uom_name
+        )
         itemsDict.append(item)
     sales_order_pk = createSalesOrder(
         customer_name=customer_name_pk,
@@ -87,7 +91,7 @@ def processAutoSale(
         rate = itemsArrayEle["rate"]
         qty = itemsArrayEle["qty"]
 
-        item_code_pk = getOrCreateItem(
+        item_code_pk, _ = getOrCreateItem(
             item_code=item_code, item_name=item_name, allow_negative_stock=True
         )
         so_detail = getSalesOrderItem(
@@ -116,7 +120,7 @@ def processAutoSale(
         rate = itemsArrayEle["rate"]
         qty = itemsArrayEle["qty"]
 
-        item_code_pk = getOrCreateItem(
+        item_code_pk, _ = getOrCreateItem(
             item_code=item_code, item_name=item_name, allow_negative_stock=True
         )
         so_detail = getSalesOrderItem(

@@ -51,7 +51,7 @@ class TestSalesInvoice(unittest.TestCase):
             item_name = itemsArrayEle["item_name"]
             rate = itemsArrayEle["rate"]
             qty = itemsArrayEle["qty"]
-            item_code_pk = getOrCreateItem(
+            item_code_pk, _ = getOrCreateItem(
                 item_code=item_code, item_name=item_name, allow_negative_stock=True
             )
             item = createSalesOrderItemDict(item_code=item_code_pk, qty=qty, rate=rate)
@@ -72,7 +72,7 @@ class TestSalesInvoice(unittest.TestCase):
             rate = itemsArrayEle["rate"]
             qty = itemsArrayEle["qty"]
 
-            item_code_pk = getOrCreateItem(
+            item_code_pk, _ = getOrCreateItem(
                 item_code=item_code, item_name=item_name, allow_negative_stock=True
             )
             so_detail = getSalesOrderItem(

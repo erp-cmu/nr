@@ -67,7 +67,7 @@ class TestAutoSales(unittest.TestCase):
             rate = itemsArrayEle["rate"]
             qty = itemsArrayEle["qty"]
             # valuation_rate = itemsArrayEle["valuation_rate"]
-            item_code_pk = getOrCreateItem(
+            item_code_pk, _ = getOrCreateItem(
                 item_code=item_code,
                 item_name=item_name,
                 allow_negative_stock=True,
@@ -91,7 +91,7 @@ class TestAutoSales(unittest.TestCase):
             rate = itemsArrayEle["rate"]
             qty = itemsArrayEle["qty"]
 
-            item_code_pk = getOrCreateItem(
+            item_code_pk, _ = getOrCreateItem(
                 item_code=item_code, item_name=item_name, allow_negative_stock=True
             )
             so_detail = getSalesOrderItem(
@@ -120,7 +120,7 @@ class TestAutoSales(unittest.TestCase):
             rate = itemsArrayEle["rate"]
             qty = itemsArrayEle["qty"]
 
-            item_code_pk = getOrCreateItem(
+            item_code_pk, _ = getOrCreateItem(
                 item_code=item_code, item_name=item_name, allow_negative_stock=True
             )
             so_detail = getSalesOrderItem(

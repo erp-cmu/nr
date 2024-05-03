@@ -18,7 +18,7 @@ def processExcelItemRowFn(row):
     item_code = row["item_code"]
     item_name = row["item_name"]
 
-    item_code_temp = getOrCreateItem(
+    item_code_temp, _ = getOrCreateItem(
         item_code=item_code,
         item_name=item_name,
         item_group=item_group_name_pk,

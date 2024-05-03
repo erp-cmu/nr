@@ -2,6 +2,7 @@ import frappe
 from nr.nr_utils.customer import getOrCreateCustomer
 from nr.nr_utils.common import date_parse
 from datetime import datetime
+from nr.nr_utils.item import makeUOMFractional
 
 
 def checkCustomExternalSalesOrderID(id):
@@ -13,9 +14,10 @@ def checkCustomExternalSalesOrderID(id):
         return None
 
 
-def createSalesOrderItemDict(item_code, qty, rate):
+def createSalesOrderItemDict(item_code, qty, rate, uom="Nos"):
 
-    item = dict(item_code=item_code, qty=qty, uom="Nos", rate=rate)
+    makeUOMFractional(uom)
+    item = dict(item_code=item_code, qty=qty, uom=uom, rate=rate)
 
     return item
 
