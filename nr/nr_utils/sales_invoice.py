@@ -17,7 +17,7 @@ def createSalesInvoiceItemDict(
     return item
 
 
-def createSalesInvoice(itemsDict, due_date, customer_name):
+def createSalesInvoice(itemsDict, due_date, customer_name, posting_date=None):
 
     customer_name_pk = getOrCreateCustomer(customer_name)
 
@@ -38,6 +38,13 @@ def createSalesInvoice(itemsDict, due_date, customer_name):
             "docstatus": 1,
         }
     )
+
+    # Note that posting_date cannot be after due_date
+    if not posting_date:
+        entryDoc.posting_date = due_date
+    else:
+        entryDoc.posting_date = posting_date
+
     for item in itemsDict:
         _ = entryDoc.append("items", {**item})
     #

@@ -34,10 +34,14 @@ class TestDeliveryNote(unittest.TestCase):
             dict(item_code="ITEM001", item_name="Item 1", rate=300, qty=10),
             dict(item_code="ITEM002", item_name="Item 2", rate=200, qty=20),
         ]
-        now = datetime.now()
-        delivery_date = now.strftime("%Y-%m-%d")
-        due_date = now.strftime("%Y-%m-%d")
-        posting_date = now.strftime("%Y-%m-%d")
+        # now = datetime.now()
+        # delivery_date = now.strftime("%Y-%m-%d")
+        # due_date = now.strftime("%Y-%m-%d")
+        # posting_date = now.strftime("%Y-%m-%d")
+
+        delivery_date = "2024-04-01"
+        due_date = delivery_date
+        posting_date = delivery_date
 
         # Logic
         customer_name_pk = getOrCreateCustomer(customer_name=customer_name)

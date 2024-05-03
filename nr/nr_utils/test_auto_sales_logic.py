@@ -47,10 +47,14 @@ class TestAutoSales(unittest.TestCase):
                 # valuation_rate=200,
             ),
         ]
-        now = datetime.now()
-        delivery_date = now.strftime("%Y-%m-%d")
-        due_date = now.strftime("%Y-%m-%d")
-        posting_date = now.strftime("%Y-%m-%d")
+        # now = datetime.now()
+        # delivery_date = now.strftime("%Y-%m-%d")
+        # due_date = now.strftime("%Y-%m-%d")
+        # posting_date = now.strftime("%Y-%m-%d")
+
+        delivery_date = "2024-04-01"
+        due_date = delivery_date
+        posting_date = delivery_date
 
         # Logic
         customer_name_pk = getOrCreateCustomer(customer_name=customer_name)

@@ -31,6 +31,7 @@ def createSalesOrder(
     itemsDict,
     custom_external_sales_order_id,
     custom_sales_order_source="OTHER",
+    transaction_date=None,
 ):
 
     customer_name_pk = getOrCreateCustomer(customer_name)
@@ -66,6 +67,13 @@ def createSalesOrder(
             "docstatus": 1,
         }
     )
+
+    # Note that transaction_date cannot be after delivery_date
+    if not transaction_date:
+        entryDoc.transaction_date = delivery_date
+    else:
+        entryDoc.transaction_date = transaction_date
+
     for item in itemsDict:
         _ = entryDoc.append("items", {**item})
     entryDoc.insert()

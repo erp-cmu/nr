@@ -29,14 +29,17 @@ class TestSalesInvoice(unittest.TestCase):
         # Input
         customer_name = "Customer 2"
         # custom_sales_order_source = "OTHER"
-        custom_external_sales_order_id = "CUSTOM0001"
+        custom_external_sales_order_id = "CUSTOM0003"
         itemsArray = [
             dict(item_code="ITEM001", item_name="Item 1", rate=300, qty=10),
             dict(item_code="ITEM002", item_name="Item 2", rate=200, qty=20),
         ]
-        now = datetime.now()
-        delivery_date = now.strftime("%Y-%m-%d")
-        due_date = now.strftime("%Y-%m-%d")
+        # now = datetime.now()
+        # delivery_date = now.strftime("%Y-%m-%d")
+        # due_date = now.strftime("%Y-%m-%d")
+
+        delivery_date = "2024-04-01"
+        due_date = delivery_date
 
         # Logic
         customer_name_pk = getOrCreateCustomer(customer_name=customer_name)
