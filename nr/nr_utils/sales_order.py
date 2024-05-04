@@ -34,6 +34,7 @@ def createSalesOrder(
     custom_external_sales_order_id,
     custom_sales_order_source="OTHER",
     transaction_date=None,
+    ignore_unique_custom_external_sales_order_id=False,  # Set True for testing
 ):
 
     customer_name_pk = getOrCreateCustomer(customer_name)
@@ -41,7 +42,10 @@ def createSalesOrder(
     validateCustomSalesOrderSource(src=custom_sales_order_source)
 
     # Make sure that user input unique custom_external_sales_order_id
-    if custom_sales_order_source != "INTERNAL":
+    if (
+        not ignore_unique_custom_external_sales_order_id
+        and custom_sales_order_source != "INTERNAL"
+    ):
 
         if not custom_external_sales_order_id:
             frappe.throw(msg="Custom external sales order ID is required.")

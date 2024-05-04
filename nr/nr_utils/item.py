@@ -48,7 +48,7 @@ def makeUOMFractional(uom_name):
     if must_be_whole_number:
         frappe.db.set_value("UOM", uom_name, "must_be_whole_number", 0)
     # This setting needs to be committed right away or else the balance calculation will give error down the process.
-    frappe.db.commit()
+    # frappe.db.commit()
 
 
 def getOrCreateItem(

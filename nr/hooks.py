@@ -67,7 +67,7 @@ required_apps = ["erpnext", "hrms"]
 # ------------
 
 # before_install = "nr.install.before_install"
-# after_install = "nr.install.after_install"
+after_install = "nr.install.after_install"
 
 # Uninstallation
 # ------------

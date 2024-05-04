@@ -38,19 +38,19 @@ class TestPaymentEntry(unittest.TestCase):
                 "item_code": "PRO7",
                 "item_name": "MRB",
                 "rate": 350,
-                "qty": 5.5,
+                "qty": 0.25,
             },
             {
                 "item_code": "PRO8",
                 "item_name": "MSB",
                 "rate": 350,
-                "qty": 5.25,
+                "qty": 0.25,
             },
             {
                 "item_code": "PRO10",
                 "item_name": "MSD",
                 "rate": 350,
-                "qty": 5.5,
+                "qty": 0.25,
             },
         ]
         # now = datetime.now()
@@ -84,6 +84,7 @@ class TestPaymentEntry(unittest.TestCase):
             delivery_date=delivery_date,
             itemsDict=itemsDict,
             custom_external_sales_order_id=custom_external_sales_order_id,
+            ignore_unique_custom_external_sales_order_id=True,
         )
 
         # Create sales invoice
@@ -130,6 +131,9 @@ class TestPaymentEntry(unittest.TestCase):
             allocated_amount=total_amount,
             outstanding_amount=total_amount,
         )
+
+        print(item)
+
         itemsDict.append(item)
 
         print(itemsDict)
