@@ -29,13 +29,13 @@ class TestAutoSalesBatch(unittest.TestCase):
                 item_code="ITEM005",
                 item_name="Item 5",
                 rate=300,
-                qty=10,
+                qty=0.15,
             ),
             dict(
                 item_code="ITEM006",
                 item_name="Item 6",
                 rate=200,
-                qty=20,
+                qty=0.23,
             ),
         ]
         now = datetime.now()
@@ -44,7 +44,7 @@ class TestAutoSalesBatch(unittest.TestCase):
         due_date = dtNow
         posting_date = dtNow
 
-        for id in ["ID1", "ID2", "ID3"]:
+        for id in ["ID4", "ID5", "ID6"]:
             processAutoSale(
                 customer_name=customer_name,
                 itemsArray=itemsArray,

@@ -47,6 +47,8 @@ def makeUOMFractional(uom_name):
     must_be_whole_number = frappe.db.get_value("UOM", uom_name, "must_be_whole_number")
     if must_be_whole_number:
         frappe.db.set_value("UOM", uom_name, "must_be_whole_number", 0)
+    # This setting needs to be committed right away or else the balance calculation will give error down the process.
+    frappe.db.commit()
 
 
 def getOrCreateItem(
@@ -55,7 +57,7 @@ def getOrCreateItem(
     item_group="Products",
     stock_uom="Nos",
     opening_stock=0,
-    valuation_rate=0.001,  # NOTE: I put non-zero number here so that the software can calculate valuation and does not complain when performing stock entry.
+    valuation_rate=0.01,  # NOTE: I put non-zero number here so that the software can calculate valuation and does not complain when performing stock entry.
     allow_negative_stock=False,
     is_stock_item=True,
 ):

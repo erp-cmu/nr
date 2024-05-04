@@ -4,7 +4,9 @@ from nr.nr_utils.account import getAccountPK
 from datetime import datetime
 
 
-def createPaymentReferencesItemDict(reference_name, total_amount, allocated_amount):
+def createPaymentReferencesItemDict(
+    reference_name, total_amount, allocated_amount, outstanding_amount
+):
 
     account_pk = getAccountPK(name="Debtors")
     reference_doctype = "Sales Invoice"
@@ -14,6 +16,7 @@ def createPaymentReferencesItemDict(reference_name, total_amount, allocated_amou
         reference_doctype=reference_doctype,
         total_amount=total_amount,
         allocated_amount=allocated_amount,
+        outstanding_amount=outstanding_amount,
         account=account_pk,
     )
     return item

@@ -159,8 +159,10 @@ def processAutoSale(
         reference_name=sales_invoice_pk,
         total_amount=total_amount,
         allocated_amount=total_amount,
+        outstanding_amount=total_amount,
     )
     itemsDict.append(item)
+
     createPaymentEntryReceive(
         customer_name=customer_name_pk,
         received_amount=total_amount,

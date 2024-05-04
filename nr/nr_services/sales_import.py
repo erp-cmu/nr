@@ -5,7 +5,16 @@ from nr.nr_utils.auto_sales import processAutoSale
 
 def processSalesOrderGroup(dfg):
 
-    # NOTE: Check whether these info are all duplicated.
+    group_key = dfg.iloc[0, :]["custom_external_sales_order_id"]
+    print("----------- processing: ", group_key, " :----------------")
+
+    # Make sure that there is no duplicated item since this will cuase problem with validation of payment entry and delivery note.
+    filtItemDup = dfg["item_code"].duplicated()
+    if filtItemDup.any():
+        frappe.msgprint(f"Foun duplicate item {group_key}. Use the first occurrence")
+        dfg = dfg[~filtItemDup]
+
+    # Check whether these info are all duplicated.
     colsDup = [
         "custom_external_sales_order_id",
         "custom_sales_order_source",
@@ -19,9 +28,8 @@ def processSalesOrderGroup(dfg):
 
     # If the dataframe does not have one row, this means the data is inconsistent.
     if dfd.shape[0] != 1:
-        probID = dfd.iloc[0, :]["custom_external_sales_order_id"]
         frappe.msgprint(
-            msg=f"Found inconsistent data in [{probID}]. Using values from the first row."
+            msg=f"Found inconsistent data in [{group_key}]. Using values from the first row."
         )
 
     row = dfd.iloc[0, :]

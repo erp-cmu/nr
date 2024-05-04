@@ -29,21 +29,21 @@ class TestAutoSales(unittest.TestCase):
     def test_auto_sales(self):
         # Input
         customer_name = "Customer 3"
-        custom_external_sales_order_id = "CUSTOM701"
+        custom_external_sales_order_id = "CUSTOM705"
         # NOTE: I include options for valuation rate here.
         itemsArray = [
             dict(
                 item_code="ITEM005",
                 item_name="Item 5",
                 rate=300,
-                qty=10,
+                qty=0.25,
                 # valuation_rate=300,
             ),
             dict(
                 item_code="ITEM006",
                 item_name="Item 6",
                 rate=200,
-                qty=20,
+                qty=0.25,
                 # valuation_rate=200,
             ),
         ]
@@ -67,13 +67,15 @@ class TestAutoSales(unittest.TestCase):
             rate = itemsArrayEle["rate"]
             qty = itemsArrayEle["qty"]
             # valuation_rate = itemsArrayEle["valuation_rate"]
-            item_code_pk, _ = getOrCreateItem(
+            item_code_pk, uom_name = getOrCreateItem(
                 item_code=item_code,
                 item_name=item_name,
                 allow_negative_stock=True,
                 # valuation_rate=valuation_rate,
             )
-            item = createSalesOrderItemDict(item_code=item_code_pk, qty=qty, rate=rate)
+            item = createSalesOrderItemDict(
+                item_code=item_code_pk, qty=qty, rate=rate, uom=uom_name
+            )
             itemsDict.append(item)
         sales_order_pk = createSalesOrder(
             customer_name=customer_name_pk,
@@ -159,6 +161,7 @@ class TestAutoSales(unittest.TestCase):
             reference_name=sales_invoice_pk,
             total_amount=total_amount,
             allocated_amount=total_amount,
+            outstanding_amount=total_amount,
         )
         itemsDict.append(item)
         createPaymentEntryReceive(

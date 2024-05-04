@@ -29,9 +29,31 @@ class TestSalesOrder(unittest.TestCase):
         customer_name = "Customer 2"
         custom_sales_order_source = "OTHER"
         custom_external_sales_order_id = "CUSTOM1501"
+
+        # itemsArray = [
+        #     dict(item_code="ITEM001", item_name="Item 1", rate=300, qty=5.5),
+        #     dict(item_code="ITEM002", item_name="Item 2", rate=200, qty=20),
+        # ]
+
         itemsArray = [
-            dict(item_code="ITEM001", item_name="Item 1", rate=300, qty=5.5),
-            dict(item_code="ITEM002", item_name="Item 2", rate=200, qty=20),
+            {
+                "item_code": "PRO7",
+                "item_name": "MRB",
+                "rate": 350,
+                "qty": 0.25,
+            },
+            {
+                "item_code": "PRO8",
+                "item_name": "MSB",
+                "rate": 350,
+                "qty": 0.25,
+            },
+            {
+                "item_code": "PRO10",
+                "item_name": "MSD",
+                "rate": 350,
+                "qty": 0.25,
+            },
         ]
         now = datetime.now()
         delivery_date = now.strftime("%Y-%m-%d")

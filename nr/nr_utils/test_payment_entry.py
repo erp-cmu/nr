@@ -28,10 +28,30 @@ class TestPaymentEntry(unittest.TestCase):
     def test_payment_entry(self):
         # Input
         customer_name = "Customer 2"
-        custom_external_sales_order_id = "CUSTOM901"
+        custom_external_sales_order_id = "CUSTOM907"
+        # itemsArray = [
+        #     dict(item_code="ITEM001", item_name="Item 1", rate=300, qty=10),
+        #     dict(item_code="ITEM002", item_name="Item 2", rate=200, qty=20),
+        # ]
         itemsArray = [
-            dict(item_code="ITEM001", item_name="Item 1", rate=300, qty=10),
-            dict(item_code="ITEM002", item_name="Item 2", rate=200, qty=20),
+            {
+                "item_code": "PRO7",
+                "item_name": "MRB",
+                "rate": 350,
+                "qty": 5.5,
+            },
+            {
+                "item_code": "PRO8",
+                "item_name": "MSB",
+                "rate": 350,
+                "qty": 5.25,
+            },
+            {
+                "item_code": "PRO10",
+                "item_name": "MSD",
+                "rate": 350,
+                "qty": 5.5,
+            },
         ]
         # now = datetime.now()
         # delivery_date = now.strftime("%Y-%m-%d")
@@ -50,10 +70,14 @@ class TestPaymentEntry(unittest.TestCase):
             item_name = itemsArrayEle["item_name"]
             rate = itemsArrayEle["rate"]
             qty = itemsArrayEle["qty"]
-            item_code_pk, _ = getOrCreateItem(
-                item_code=item_code, item_name=item_name, allow_negative_stock=True
+            item_code_pk, uom_name = getOrCreateItem(
+                item_code=item_code,
+                item_name=item_name,
+                allow_negative_stock=True,
             )
-            item = createSalesOrderItemDict(item_code=item_code_pk, qty=qty, rate=rate)
+            item = createSalesOrderItemDict(
+                item_code=item_code_pk, qty=qty, rate=rate, uom=uom_name
+            )
             itemsDict.append(item)
         sales_order_pk = createSalesOrder(
             customer_name=customer_name_pk,
@@ -104,8 +128,11 @@ class TestPaymentEntry(unittest.TestCase):
             reference_name=sales_invoice_pk,
             total_amount=total_amount,
             allocated_amount=total_amount,
+            outstanding_amount=total_amount,
         )
         itemsDict.append(item)
+
+        print(itemsDict)
         createPaymentEntryReceive(
             customer_name=customer_name_pk,
             received_amount=total_amount,

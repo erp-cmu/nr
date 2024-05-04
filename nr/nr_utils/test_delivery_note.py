@@ -31,8 +31,8 @@ class TestDeliveryNote(unittest.TestCase):
         customer_name = "Customer 2"
         custom_external_sales_order_id = "CUSTOM801"
         itemsArray = [
-            dict(item_code="ITEM001", item_name="Item 1", rate=300, qty=10),
-            dict(item_code="ITEM002", item_name="Item 2", rate=200, qty=20),
+            dict(item_code="ITEM001", item_name="Item 1", rate=300, qty=10.5),
+            dict(item_code="ITEM002", item_name="Item 2", rate=200, qty=20.5),
         ]
         # now = datetime.now()
         # delivery_date = now.strftime("%Y-%m-%d")
@@ -53,10 +53,12 @@ class TestDeliveryNote(unittest.TestCase):
             item_name = itemsArrayEle["item_name"]
             rate = itemsArrayEle["rate"]
             qty = itemsArrayEle["qty"]
-            item_code_pk, _ = getOrCreateItem(
+            item_code_pk, uom_name = getOrCreateItem(
                 item_code=item_code, item_name=item_name, allow_negative_stock=True
             )
-            item = createSalesOrderItemDict(item_code=item_code_pk, qty=qty, rate=rate)
+            item = createSalesOrderItemDict(
+                item_code=item_code_pk, qty=qty, rate=rate, uom=uom_name
+            )
             itemsDict.append(item)
         sales_order_pk = createSalesOrder(
             customer_name=customer_name_pk,

@@ -30,9 +30,29 @@ class TestSalesInvoice(unittest.TestCase):
         customer_name = "Customer 2"
         # custom_sales_order_source = "OTHER"
         custom_external_sales_order_id = "CUSTOM0003"
+        # itemsArray = [
+        #     dict(item_code="ITEM001", item_name="Item 1", rate=300, qty=10),
+        #     dict(item_code="ITEM002", item_name="Item 2", rate=200, qty=20),
+        # ]
         itemsArray = [
-            dict(item_code="ITEM001", item_name="Item 1", rate=300, qty=10),
-            dict(item_code="ITEM002", item_name="Item 2", rate=200, qty=20),
+            {
+                "item_code": "PRO7",
+                "item_name": "MRB",
+                "rate": 350,
+                "qty": 0.25,
+            },
+            {
+                "item_code": "PRO8",
+                "item_name": "MSB",
+                "rate": 350,
+                "qty": 0.25,
+            },
+            {
+                "item_code": "PRO10",
+                "item_name": "MSD",
+                "rate": 350,
+                "qty": 0.25,
+            },
         ]
         # now = datetime.now()
         # delivery_date = now.strftime("%Y-%m-%d")
@@ -51,10 +71,14 @@ class TestSalesInvoice(unittest.TestCase):
             item_name = itemsArrayEle["item_name"]
             rate = itemsArrayEle["rate"]
             qty = itemsArrayEle["qty"]
-            item_code_pk, _ = getOrCreateItem(
-                item_code=item_code, item_name=item_name, allow_negative_stock=True
+            item_code_pk, uom_name = getOrCreateItem(
+                item_code=item_code,
+                item_name=item_name,
+                allow_negative_stock=True,
             )
-            item = createSalesOrderItemDict(item_code=item_code_pk, qty=qty, rate=rate)
+            item = createSalesOrderItemDict(
+                item_code=item_code_pk, qty=qty, rate=rate, uom=uom_name
+            )
             itemsDict.append(item)
         sales_order_pk = createSalesOrder(
             customer_name=customer_name_pk,
