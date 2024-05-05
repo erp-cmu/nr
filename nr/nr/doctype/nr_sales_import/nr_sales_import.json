@@ -1,6 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "format:NRSALES-{####}-{YYYY}-{MM}-{DD}",
  "creation": "2024-05-02 12:14:49.045625",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -12,7 +13,7 @@
   {
    "fieldname": "section_break_yzhx",
    "fieldtype": "Section Break",
-   "label": "Break"
+   "label": "Data"
   },
   {
    "fieldname": "excel",
@@ -24,10 +25,11 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-05-02 12:15:45.245836",
+ "modified": "2024-05-05 08:11:45.332932",
  "modified_by": "Administrator",
  "module": "NR",
  "name": "NR Sales Import",
+ "naming_rule": "Expression",
  "owner": "Administrator",
  "permissions": [
   {

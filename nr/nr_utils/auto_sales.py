@@ -3,7 +3,7 @@ from nr.nr_utils.sales_invoice import (
     createSalesInvoiceItemDict,
     getSalesInvoiceItem,
 )
-from nr.nr_utils.item import getOrCreateItem, makeUOMFractional
+from nr.nr_utils.item import getOrCreateItem
 from nr.nr_utils.sales_order import (
     createSalesOrder,
     getSalesOrderItem,
@@ -28,6 +28,7 @@ def processAutoSale(
     posting_date,
     custom_external_sales_order_id,
     custom_sales_order_source="OTHER",
+    stock_uom="Nos",
 ):
     # NOTE: This process does not take into account valuation rate.
     # Example of itemArray
@@ -68,6 +69,7 @@ def processAutoSale(
             item_code=item_code,
             item_name=item_name,
             allow_negative_stock=True,
+            stock_uom=stock_uom,
         )
 
         item = createSalesOrderItemDict(
@@ -80,6 +82,7 @@ def processAutoSale(
         itemsDict=itemsDict,
         custom_external_sales_order_id=custom_external_sales_order_id,
         custom_sales_order_source=custom_sales_order_source,
+        ignore_unique_custom_external_sales_order_id=False,
     )
 
     # Create sales invoice
@@ -91,7 +94,7 @@ def processAutoSale(
         rate = itemsArrayEle["rate"]
         qty = itemsArrayEle["qty"]
 
-        item_code_pk, _ = getOrCreateItem(
+        item_code_pk, uom_name = getOrCreateItem(
             item_code=item_code, item_name=item_name, allow_negative_stock=True
         )
         so_detail = getSalesOrderItem(
@@ -104,6 +107,7 @@ def processAutoSale(
             rate=rate,
             sales_order=sales_order_pk,
             so_detail=so_detail,
+            uom=uom_name,
         )
         itemsDict.append(item)
     #
@@ -120,7 +124,7 @@ def processAutoSale(
         rate = itemsArrayEle["rate"]
         qty = itemsArrayEle["qty"]
 
-        item_code_pk, _ = getOrCreateItem(
+        item_code_pk, uom_name = getOrCreateItem(
             item_code=item_code, item_name=item_name, allow_negative_stock=True
         )
         so_detail = getSalesOrderItem(
@@ -137,6 +141,7 @@ def processAutoSale(
             so_detail=so_detail,
             against_sales_invoice=sales_invoice_pk,
             si_detail=si_detail,
+            uom=uom_name,
         )
         itemsDict.append(item)
 

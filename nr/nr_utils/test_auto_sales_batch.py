@@ -52,4 +52,5 @@ class TestAutoSalesBatch(unittest.TestCase):
                 due_date=due_date,
                 posting_date=posting_date,
                 custom_external_sales_order_id=id,
+                stock_uom="Nos_frac",
             )

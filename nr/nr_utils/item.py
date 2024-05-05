@@ -43,14 +43,6 @@ def getUOM(item_name):
     return stock_uom
 
 
-def makeUOMFractional(uom_name):
-    must_be_whole_number = frappe.db.get_value("UOM", uom_name, "must_be_whole_number")
-    if must_be_whole_number:
-        frappe.db.set_value("UOM", uom_name, "must_be_whole_number", 0)
-    # This setting needs to be committed right away or else the balance calculation will give error down the process.
-    # frappe.db.commit()
-
-
 def getOrCreateItem(
     item_code,
     item_name,

@@ -75,6 +75,7 @@ class TestSalesInvoice(unittest.TestCase):
                 item_code=item_code,
                 item_name=item_name,
                 allow_negative_stock=True,
+                stock_uom="Nos_frac",
             )
             item = createSalesOrderItemDict(
                 item_code=item_code_pk, qty=qty, rate=rate, uom=uom_name
@@ -85,6 +86,7 @@ class TestSalesInvoice(unittest.TestCase):
             delivery_date=delivery_date,
             itemsDict=itemsDict,
             custom_external_sales_order_id=custom_external_sales_order_id,
+            ignore_unique_custom_external_sales_order_id=True,
         )
 
         # Create sales invoice
@@ -96,7 +98,7 @@ class TestSalesInvoice(unittest.TestCase):
             rate = itemsArrayEle["rate"]
             qty = itemsArrayEle["qty"]
 
-            item_code_pk, _ = getOrCreateItem(
+            item_code_pk, uom_name = getOrCreateItem(
                 item_code=item_code, item_name=item_name, allow_negative_stock=True
             )
             so_detail = getSalesOrderItem(
@@ -109,6 +111,7 @@ class TestSalesInvoice(unittest.TestCase):
                 rate=rate,
                 sales_order=sales_order_pk,
                 so_detail=so_detail,
+                uom=uom_name,
             )
             itemsDict.append(item)
         #

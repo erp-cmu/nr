@@ -70,6 +70,7 @@ class TestSalesOrder(unittest.TestCase):
                 item_code=item_code,
                 item_name=item_name,
                 allow_negative_stock=True,
+                stock_uom="Nos_frac",
             )
             item = createSalesOrderItemDict(
                 item_code=item_code_pk, qty=qty, rate=rate, uom=uom_name
@@ -82,6 +83,7 @@ class TestSalesOrder(unittest.TestCase):
             itemsDict=itemsDict,
             custom_external_sales_order_id=custom_external_sales_order_id,
             custom_sales_order_source=custom_sales_order_source,
+            ignore_unique_custom_external_sales_order_id=True,
         )
         print(sales_order_pk)
         self.assertIsNone(None)

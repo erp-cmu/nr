@@ -58,9 +58,10 @@ def processSalesOrderGroup(dfg):
         posting_date=posting_date,
         custom_external_sales_order_id=custom_external_sales_order_id,
         custom_sales_order_source=custom_sales_order_source,
+        stock_uom="Nos_frac",
     )
 
-    # frappe.db.commit()
+    frappe.db.commit()
 
 
 def processExcelAutoSalesFile(filepath):

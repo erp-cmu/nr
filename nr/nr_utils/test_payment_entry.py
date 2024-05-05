@@ -74,6 +74,7 @@ class TestPaymentEntry(unittest.TestCase):
                 item_code=item_code,
                 item_name=item_name,
                 allow_negative_stock=True,
+                stock_uom="Nos_frac",
             )
             item = createSalesOrderItemDict(
                 item_code=item_code_pk, qty=qty, rate=rate, uom=uom_name
@@ -96,7 +97,7 @@ class TestPaymentEntry(unittest.TestCase):
             rate = itemsArrayEle["rate"]
             qty = itemsArrayEle["qty"]
 
-            item_code_pk, _ = getOrCreateItem(
+            item_code_pk, uom_name = getOrCreateItem(
                 item_code=item_code, item_name=item_name, allow_negative_stock=True
             )
             so_detail = getSalesOrderItem(
@@ -109,6 +110,7 @@ class TestPaymentEntry(unittest.TestCase):
                 rate=rate,
                 sales_order=sales_order_pk,
                 so_detail=so_detail,
+                uom=uom_name,
             )
             itemsDict.append(item)
         #
@@ -131,12 +133,8 @@ class TestPaymentEntry(unittest.TestCase):
             allocated_amount=total_amount,
             outstanding_amount=total_amount,
         )
-
-        print(item)
-
         itemsDict.append(item)
 
-        print(itemsDict)
         createPaymentEntryReceive(
             customer_name=customer_name_pk,
             received_amount=total_amount,
