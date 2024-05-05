@@ -26,5 +26,4 @@ def after_install():
     # This method is dangerous since I do not know if other values are modified or not.
     # doc = frappe.get_doc("Global Defaults")
     # doc.disable_rounded_total = 1
-
-    doc.insert()
+    # doc.insert()
