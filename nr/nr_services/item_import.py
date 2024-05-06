@@ -27,8 +27,9 @@ colsAll = [*colsReq, *colsOpt]
 
 def processExcelItemRowFn(row):
 
-    idx = row["item_code"]
+    item_code_idx = row["item_code"]
 
+    print("----------- processing: ", item_code_idx, " :----------------")
     itemData = dict()
 
     # Process required value
@@ -37,7 +38,7 @@ def processExcelItemRowFn(row):
         if value:
             itemData[col] = value
         else:
-            frappe.throw(msg=f"Require {col} in item: {idx}.")
+            frappe.throw(msg=f"Require {col} in item: {item_code_idx}.")
 
     # Process optional values
     for col in colsAll:

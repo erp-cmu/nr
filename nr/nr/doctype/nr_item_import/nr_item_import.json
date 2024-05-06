@@ -1,6 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "format:NRITEM-{####}-{YYYY}-{MM}-{DD}",
  "creation": "2024-03-21 04:58:27.192765",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -24,10 +25,11 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-03-21 04:59:19.609984",
+ "modified": "2024-05-06 15:10:31.637280",
  "modified_by": "Administrator",
  "module": "NR",
  "name": "NR Item Import",
+ "naming_rule": "Expression",
  "owner": "Administrator",
  "permissions": [
   {
