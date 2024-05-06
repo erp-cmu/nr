@@ -1,3 +1,5 @@
+# bench --site mysite run-tests --module "nr.nr_utils.test_item"
+
 import frappe
 import unittest
 from nr.nr_utils.item import getOrCreateItem, getOrCreateUOM, getOrCreateItemGroup
@@ -13,7 +15,7 @@ def create_events():
     frappe.flags.test_events_created = True
 
 
-class TestEvent(unittest.TestCase):
+class TestItem(unittest.TestCase):
     def setUp(self):
         frappe.set_user("Administrator")
 
@@ -22,39 +24,54 @@ class TestEvent(unittest.TestCase):
 
     def test_item(self):
 
-        item_group_name = "GGG"
+        # Input
+        item_group_name = "ITEM_GROUP_1"
+        uom_name = "UOM_1"
+        parent_warehouse_name = "PARENT_WAREHOUSE_1"
+        warehouse_name = "WAREHOUSE_1"
+        item_code = "ITEM002"
+        item_name = "ITEMNAME002"
+        opening_stock = 120
+        valuation_rate = 200
+        allow_negative_stock = False
+
+        # Create item group
         item_group_name_pk = getOrCreateItemGroup(item_group_name=item_group_name)
 
-        uom_name = "AAA"
-        uom_name_pk = getOrCreateUOM(uom_name=uom_name)
+        # Create UOM
+        uom_name_pk = getOrCreateUOM(uom_name=uom_name, must_be_whole_number=False)
 
+        # Create parent warehouse
         parent_warehouse_pk = getOrCreateWarehouse(
-            "Test", parent_warehouse=None, is_group=True
+            parent_warehouse_name, parent_warehouse=None, is_group=True
         )
 
+        # Create warehouse
         warehouse_pk = getOrCreateWarehouse(
-            "CCC",
+            warehouse_name,
             parent_warehouse=parent_warehouse_pk,
         )
 
-        item_code = "ITEM001"
-        item_name = "ITEMNAME001"
-        getOrCreateItem(
+        # Create item
+        item_name_pk, uom_name = getOrCreateItem(
             item_code=item_code,
             item_name=item_name,
             item_group=item_group_name_pk,
             stock_uom=uom_name_pk,
-            opening_stock=10,
+            opening_stock=0,
+            allow_negative_stock=allow_negative_stock,
+            valuation_rate=valuation_rate,
         )
-        qty = 101
-        itemDict = createStockEntryItemDict(
-            item_code=item_code,
-            qty=qty,
-        )
-        itemsDict = [itemDict]
 
-        createStockEntry(
-            itemsDict=itemsDict, to_warehouse=warehouse_pk, item_inout="IN"
-        )
+        # Create opening stock
+        if opening_stock > 0:
+            qty = opening_stock
+            itemDict = createStockEntryItemDict(
+                item_code=item_name_pk, qty=qty, uom=uom_name
+            )
+            itemsDict = [itemDict]
+            createStockEntry(
+                itemsDict=itemsDict, to_warehouse=warehouse_pk, item_inout="IN"
+            )
 
         self.assertIsNone(None)

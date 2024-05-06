@@ -1,56 +1,50 @@
 import frappe
 import pandas as pd
 
-from nr.nr_utils.warehouse import getOrCreateWarehouse
-from nr.nr_utils.item import getOrCreateItem, getOrCreateItemGroup, getOrCreateUOM
-from nr.nr_utils.stock_entry import createStockEntryItemDict, createStockEntry
+# from nr.nr_utils.warehouse import getOrCreateWarehouse
+from nr.nr_utils.auto_item_import import processAutoItemImport
 
 
 def processExcelItemRowFn(row):
     item_group_name = row["item_group"]
-    item_group_name_pk = getOrCreateItemGroup(item_group_name=item_group_name)
-
     uom_name = row["uom"]
-    uom_name_pk = getOrCreateUOM(uom_name=uom_name)
-
     warehouse_name = row["warehouse"]
-    warehouse_name_pk = getOrCreateWarehouse(warehouse_name)
     item_code = row["item_code"]
     item_name = row["item_name"]
+    item_group_name = row["item_group"]
+    valuation_rate = row["valudation_rate"]
+    opening_stock = row["opening_stock"]
+    allow_negative_stock = row["allow_negative_stock"]
 
-    item_code_temp, _ = getOrCreateItem(
-        item_code=item_code,
+    processAutoItemImport(
         item_name=item_name,
-        item_group=item_group_name_pk,
-        stock_uom=uom_name_pk,
-        opening_stock=0,
+        item_code=item_code,
+        opening_stock=opening_stock,
+        warehouse_name=warehouse_name,
+        must_be_whole_number=False,
+        allow_negative_stock=allow_negative_stock,
+        valuation_rate=valuation_rate,
+        item_group_name=item_group_name,
+        uom_name=uom_name,
     )
 
-    qty = row["opening_stock"]
-    if qty > 0:
-        itemDict = createStockEntryItemDict(
-            item_code=item_code,
-            qty=qty,
-        )
-        itemsDict = [itemDict]
-        createStockEntry(
-            itemsDict=itemsDict, to_warehouse=warehouse_name_pk, item_inout="IN"
-        )
+    frappe.db.commit()
+
     return None
 
 
-def processExcelWarehouse(row):
-    warehouse_name = row["warehouse"]
-    warehouse_name_pk = getOrCreateWarehouse(warehouse_name)
-    return warehouse_name_pk
+# def processExcelWarehouse(row):
+#     warehouse_name = row["warehouse"]
+#     warehouse_name_pk = getOrCreateWarehouse(warehouse_name)
+#     return warehouse_name_pk
 
 
 def processExcelItemFile(filepath):
 
-    defaultItemGroup = "DEFAULT"
-    defaultValuationRate = 0.01
-    defaultWarehouse = "Store"
-
+    # defaultItemGroup = "DEFAULT"
+    # defaultValuationRate = 0.01
+    # defaultWarehouse = "Store"
+    #
     dft = pd.read_excel(filepath)
     cols = dft.columns.values
 

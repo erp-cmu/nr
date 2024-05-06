@@ -8,3 +8,12 @@ start-process "chrome.exe" "http://localhost:8000/app/item", '--profile-director
 start-process "chrome.exe" "http://localhost:8000/app/repost-item-valuation", '--profile-directory="Default"' &
 start-process "chrome.exe" "http://localhost:8000/app/customer", '--profile-directory="Default"' &
 start-process "chrome.exe" "http://localhost:8000/app/account/view/tree", '--profile-directory="Default"'
+
+# Testing Item
+
+start-process "chrome.exe" "http://localhost:8000/app/item", '--profile-directory="Default"' &
+start-process "chrome.exe" "http://localhost:8000/app/warehouse", '--profile-directory="Default"' &
+start-process "chrome.exe" "http://localhost:8000/app/item-group", '--profile-directory="Default"' &
+start-process "chrome.exe" "http://localhost:8000/app/uom", '--profile-directory="Default"' &
+start-process "chrome.exe" "http://localhost:8000/app/stock-entry", '--profile-directory="Default"' &
+start-process "chrome.exe" "http://localhost:8000/app/repost-item-valuation", '--profile-directory="Default"' &

@@ -6,9 +6,10 @@ from nr.nr_utils.warehouse import getWarehousePK
 def createStockEntryItemDict(
     item_code,
     qty,
+    uom="Nos",
     basic_rate=None,
 ):
-    item = dict(item_code=item_code, qty=qty)
+    item = dict(item_code=item_code, qty=qty, uom=uom)
     if basic_rate:
         # valuation_rate does not seen to make a difference here, use basic_rate instead to speficy item cost
         item = {**item, "basic_rate": basic_rate}
