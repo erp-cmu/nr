@@ -2,6 +2,7 @@ import frappe
 from nr.nr_utils.company import getFirstCompany
 from nr.nr_utils.account import getAccountPK
 
+
 def getWarehousePK(name, company=None):
     if not company:
         company = getFirstCompany()
@@ -33,7 +34,7 @@ def getOrCreateWarehouse(
     parent_warehouse=None,
     is_group=False,
     company=None,
-    account="Stock In Hand"
+    account="Stock In Hand",
 ):
 
     if not company:
@@ -46,13 +47,12 @@ def getOrCreateWarehouse(
     if warehouse_name_pk:
         return warehouse_name_pk
 
-
     dataDict = {
         "doctype": "Warehouse",
         "warehouse_name": warehouse_name,
         "company": company,
         "is_group": is_group,
-        "account": account_name_pk
+        "account": account_name_pk,
     }
 
     # Handle parent warehouse
@@ -70,4 +70,5 @@ def getOrCreateWarehouse(
     doc = frappe.get_doc(dataDict)
     doc.insert()
 
+    frappe.db.commit()
     return doc.name

@@ -45,7 +45,7 @@ def processAutoItemImport(
         allow_negative_stock=allow_negative_stock,
     )
     if valuation_rate:
-        itemData["valudation_rate"] = valuation_rate
+        itemData["valuation_rate"] = valuation_rate
     item_name_pk, uom_name = getOrCreateItem(**itemData)
 
     # Create opening stock
