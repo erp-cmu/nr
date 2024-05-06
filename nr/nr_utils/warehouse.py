@@ -70,5 +70,4 @@ def getOrCreateWarehouse(
     doc = frappe.get_doc(dataDict)
     doc.insert()
 
-    frappe.db.commit()
     return doc.name

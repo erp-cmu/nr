@@ -22,31 +22,42 @@ class TestAutoItem(unittest.TestCase):
 
     def test_auto_item(self):
 
-        # Required
-        item_code = "CODE_102"
-        item_name = "NAME_102"
+        itemArray = []
 
-        # Optional
-        uom_name = "UOM_102"
-        warehouse_name = "J5"
-        item_group_name = "ITEM_GROUP_102"
-        valuation_rate = 300
-        opening_stock = 200
-        allow_negative_stock = False
-        parent_warehouse_name = "PARENT_WAREHOUSE_2"
-        must_be_whole_number = False
-
-        processAutoItemImport(
-            item_name=item_name,
-            item_code=item_code,
-            opening_stock=opening_stock,
-            warehouse_name=warehouse_name,
-            must_be_whole_number=must_be_whole_number,
-            allow_negative_stock=allow_negative_stock,
-            valuation_rate=valuation_rate,
-            # item_group_name=item_group_name,
-            uom_name=uom_name,
-            # parent_warehouse_name=parent_warehouse_name,
+        itemEle = dict(
+            # Required
+            item_code="CODE_102",
+            item_name="NAME_102",
+            # Optional
+            uom_name="UOM_102",
+            warehouse_name="J21",
+            item_group_name="ITEM_GROUP_102",
+            valuation_rate=300,
+            opening_stock=200,
+            allow_negative_stock=False,
+            parent_warehouse_name="PARENT_WAREHOUSE_2",
+            must_be_whole_number=False,
         )
+        itemArray.append(itemEle)
+
+        itemEle = {
+            **itemEle,
+            "warehouse_name": "J22",
+        }
+        itemArray.append(itemEle)
+
+        for item in itemArray:
+            processAutoItemImport(
+                item_name=item["item_name"],
+                item_code=item["item_code"],
+                opening_stock=item["opening_stock"],
+                warehouse_name=item["warehouse_name"],
+                must_be_whole_number=item["must_be_whole_number"],
+                allow_negative_stock=item["allow_negative_stock"],
+                valuation_rate=item["valuation_rate"],
+                # item_group_name=item["item_group_name"],
+                uom_name=item["uom_name"],
+                # parent_warehouse_name=item["parent_warehouse_name"],
+            )
 
         self.assertIsNone(None)
