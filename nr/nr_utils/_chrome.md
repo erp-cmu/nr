@@ -1,4 +1,4 @@
-# Testing sales process
+# Testing Sales Process
 
 start-process "chrome.exe" "http://localhost:8000/app/sales-order", '--profile-directory="Default"' &
 start-process "chrome.exe" "http://localhost:8000/app/sales-invoice", '--profile-directory="Default"' &
@@ -17,3 +17,12 @@ start-process "chrome.exe" "http://localhost:8000/app/item-group", '--profile-di
 start-process "chrome.exe" "http://localhost:8000/app/uom", '--profile-directory="Default"' &
 start-process "chrome.exe" "http://localhost:8000/app/stock-entry", '--profile-directory="Default"' &
 start-process "chrome.exe" "http://localhost:8000/app/repost-item-valuation", '--profile-directory="Default"' &
+
+# Testing Checkin
+
+start-process "chrome.exe" "http://localhost:8000/app/nr-checkin-import", '--profile-directory="Default"' &
+start-process "chrome.exe" "http://localhost:8000/app/employee", '--profile-directory="Default"' &
+start-process "chrome.exe" "http://localhost:8000/app/shift-type", '--profile-directory="Default"' &
+start-process "chrome.exe" "http://localhost:8000/app/shift-assignment", '--profile-directory="Default"' &
+start-process "chrome.exe" "http://localhost:8000/app/employee-checkin", '--profile-directory="Default"' &
+start-process "chrome.exe" "http://localhost:8000/app/attendance", '--profile-directory="Default"' &

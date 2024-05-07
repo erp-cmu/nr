@@ -27,3 +27,8 @@ def after_install():
     # doc = frappe.get_doc("Global Defaults")
     # doc.disable_rounded_total = 1
     # doc.insert()
+
+    # Create gender for checking
+    doc = frappe.get_doc({"doctype": "Gender", "gender": "Male"})
+    doc = frappe.get_doc({"doctype": "Gender", "gender": "Female"})
+    doc = frappe.get_doc({"doctype": "Gender", "gender": "Other"})
