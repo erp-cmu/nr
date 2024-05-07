@@ -3,8 +3,8 @@
 
 import frappe, os
 from frappe.model.document import Document
-from nr.nr_company.tor import processExcelTorDrink
-from nr.nr_company.nakorn import processExcelNakorn
+from nr.nr_services.checkin_import.tor import processExcelTorDrink
+from nr.nr_services.checkin_import.nakorn import processExcelNakorn
 
 
 class NRCheckinImport(Document):
