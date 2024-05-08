@@ -6,12 +6,12 @@ from nr.nr_utils.auto_item_import import processAutoItemImport
 
 
 # Column names
-colsReq = [
+colsReqNoBlank = [
     "item_code",
     "item_name",
 ]
 
-colsOpt = [
+colsReqNullable = [
     "opening_stock",
     "warehouse_name",
     "allow_negative_stock",
@@ -19,10 +19,12 @@ colsOpt = [
     "must_be_whole_number",
     "item_group_name",
     "uom_name",
-    "parent_warehouse_name",
 ]
 
-colsAll = [*colsReq, *colsOpt]
+colsOpt = ["parent_warehouse_name", "is_stock_item"]
+
+
+colsReqAll = [*colsReqNoBlank, *colsReqNullable]
 
 
 def processExcelItemRowFn(row):
@@ -32,19 +34,26 @@ def processExcelItemRowFn(row):
     print("----------- processing: ", item_code_idx, " :----------------")
     itemData = dict()
 
-    # Process required value
-    for col in colsReq:
+    # Process required columns with non-blank value
+    for col in colsReqNoBlank:
         value = row[col]
         if value:
             itemData[col] = value
         else:
             frappe.throw(msg=f"Require {col} in item: {item_code_idx}.")
 
-    # Process optional values
-    for col in colsAll:
+    # Process required column with nullable values
+    for col in colsReqAll:
         value = row[col]
         if value:
             itemData[col] = value
+
+    # Process optional columns
+    for col in colsOpt:
+        if col in row.index:
+            value = row[col]
+            if value:
+                itemData[col] = value
 
     processAutoItemImport(**itemData)
 
@@ -66,10 +75,10 @@ def processExcelItemFile(filepath):
     dft = pd.read_excel(filepath)
     cols = dft.columns.values
 
-    for c in colsAll:
+    for c in colsReqAll:
         if c not in cols:
             frappe.throw(title="Error", msg=f"Missing {c} column.")
-    df = dft[colsAll]
+    df = dft[colsReqAll]
 
     # NOTE: I need to create warehouse before create item.
     # Without this method, I encountered error about warehouse not connected to account

@@ -37,6 +37,7 @@ class TestAutoItem(unittest.TestCase):
             allow_negative_stock=False,
             parent_warehouse_name="PARENT_WAREHOUSE_2",
             must_be_whole_number=False,
+            is_stock_item=True,
         )
         itemArray.append(itemEle)
 
@@ -58,6 +59,7 @@ class TestAutoItem(unittest.TestCase):
                 # item_group_name=item["item_group_name"],
                 uom_name=item["uom_name"],
                 # parent_warehouse_name=item["parent_warehouse_name"],
+                is_stock_item=item["is_stock_item"],
             )
 
         self.assertIsNone(None)

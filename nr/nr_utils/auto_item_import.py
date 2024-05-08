@@ -14,6 +14,7 @@ def processAutoItemImport(
     warehouse_name="TEMP",
     parent_warehouse_name="CUSTOM",
     must_be_whole_number=False,
+    is_stock_item=True,
 ):
 
     # Create item group
@@ -43,6 +44,7 @@ def processAutoItemImport(
         stock_uom=uom_name_pk,
         opening_stock=0,
         allow_negative_stock=allow_negative_stock,
+        is_stock_item=is_stock_item,
     )
     if valuation_rate:
         itemData["valuation_rate"] = valuation_rate
