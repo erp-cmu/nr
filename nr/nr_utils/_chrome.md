@@ -1,5 +1,6 @@
 # Testing Sales Process
 
+start-process "chrome.exe" "http://localhost:8000/app/nr-sales-import", '--profile-directory="Default"' &
 start-process "chrome.exe" "http://localhost:8000/app/sales-order", '--profile-directory="Default"' &
 start-process "chrome.exe" "http://localhost:8000/app/sales-invoice", '--profile-directory="Default"' &
 start-process "chrome.exe" "http://localhost:8000/app/payment-entry", '--profile-directory="Default"' &
