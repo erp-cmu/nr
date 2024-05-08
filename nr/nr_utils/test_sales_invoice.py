@@ -36,19 +36,19 @@ class TestSalesInvoice(unittest.TestCase):
         # ]
         itemsArray = [
             {
-                "item_code": "PRO7",
-                "item_name": "MRB",
-                "rate": 350,
-                "qty": 0.25,
-            },
-            {
-                "item_code": "PRO8",
-                "item_name": "MSB",
+                "item_code": "PRO9",
+                "item_name": "RRR",
                 "rate": 350,
                 "qty": 0.25,
             },
             {
                 "item_code": "PRO10",
+                "item_name": "RRR2",
+                "rate": 350,
+                "qty": 0.25,
+            },
+            {
+                "item_code": "PRO11",
                 "item_name": "MSD",
                 "rate": 350,
                 "qty": 0.25,
@@ -101,6 +101,7 @@ class TestSalesInvoice(unittest.TestCase):
             item_code_pk, uom_name = getOrCreateItem(
                 item_code=item_code, item_name=item_name, allow_negative_stock=True
             )
+
             so_detail = getSalesOrderItem(
                 sales_order_name=sales_order_pk, item_code=item_code_pk
             )
