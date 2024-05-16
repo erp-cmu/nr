@@ -31,6 +31,7 @@ class TestStockEntry(unittest.TestCase):
             dict(item_code="A0003", qty=10.5, basic_rate=100),
             dict(item_code="A0004", qty=100.5, basic_rate=200),
         ]
+        posting_date = "2024-04-01"
 
         to_warehouse_pk = getOrCreateWarehouse(
             to_warehouse,
@@ -71,5 +72,6 @@ class TestStockEntry(unittest.TestCase):
             to_warehouse=to_warehouse_pk,
             from_warehouse=from_warehouse_pk,
             item_inout=item_inout,
+            posting_date=posting_date,
         )
         self.assertIsNone(None)

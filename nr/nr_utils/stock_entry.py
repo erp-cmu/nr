@@ -1,6 +1,8 @@
 import frappe
 from nr.nr_utils.company import getFirstCompany
 from nr.nr_utils.warehouse import getWarehousePK
+from nr.nr_utils.common import date_parse
+from datetime import datetime
 
 
 def createStockEntryItemDict(
@@ -17,8 +19,24 @@ def createStockEntryItemDict(
 
 
 def createStockEntry(
-    itemsDict, item_inout, to_warehouse=None, from_warehouse=None, company=None
+    itemsDict,
+    item_inout,
+    to_warehouse=None,
+    from_warehouse=None,
+    company=None,
+    posting_date=None,
 ):
+
+    print("Posting Date", posting_date)
+    if not posting_date:
+        posting_date = datetime.now()
+    elif type(posting_date) is str:
+        try:
+            posting_date = date_parse(posting_date)
+        except:
+            frappe.throw("Cannot parse date string.")
+    else:
+        frappe.throw("Invalid posting_Date")
 
     if item_inout == "IN":
         stock_entry_type = "Material Receipt"
@@ -54,6 +72,8 @@ def createStockEntry(
     docData = {
         "stock_entry_type": stock_entry_type,
         "company": company,
+        "posting_date": posting_date,
+        "set_posting_time": True,
     }
     if item_inout == "IN":
         docData["to_warehouse"] = to_warehouse_name_pk
