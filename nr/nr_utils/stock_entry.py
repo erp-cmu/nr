@@ -16,31 +16,51 @@ def createStockEntryItemDict(
     return item
 
 
-def createStockEntry(to_warehouse, itemsDict, item_inout, company=None):
+def createStockEntry(
+    itemsDict, item_inout, to_warehouse=None, from_warehouse=None, company=None
+):
 
     if item_inout == "IN":
         stock_entry_type = "Material Receipt"
+        if not to_warehouse:
+            frappe.throw(msg="Need to_warehouse")
     elif item_inout == "OUT":
         stock_entry_type = "Material Issue"
+        if not from_warehouse:
+            frappe.throw(msg="Need from_warehouse")
     else:
         frappe.throw("Unknown item_inout")
 
     if not company:
         company = getFirstCompany()
 
-    to_warehouse_name_pk = getWarehousePK(to_warehouse)
-    if not to_warehouse_name_pk:
-        frappe.throw("Unknown warehouse")
+    if to_warehouse:
+        to_warehouse_name_pk = getWarehousePK(to_warehouse)
+        if not to_warehouse_name_pk:
+            frappe.throw(f"Unknown warehouse: {to_warehouse_name_pk}")
 
-    entryDoc = frappe.get_doc(
-        {
-            "doctype": "Stock Entry",
-            "docstatus": 1,
-            "stock_entry_type": stock_entry_type,
-            "company": company,
-            "to_warehouse": to_warehouse_name_pk,
-        }
-    )
+    if from_warehouse:
+        from_warehouse_name_pk = getWarehousePK(from_warehouse)
+        if not from_warehouse_name_pk:
+            frappe.throw(f"Unknown warehouse: {from_warehouse_name_pk}")
+
+    # Check for valid item
+    for item in itemsDict:
+        item_code = item["item_code"]
+        item_name_pk = frappe.db.exists("Item", {"item_code": item_code})
+        if not item_name_pk:
+            frappe.throw(msg=f"Cannot find item: {item_code}")
+
+    docData = {
+        "stock_entry_type": stock_entry_type,
+        "company": company,
+    }
+    if item_inout == "IN":
+        docData["to_warehouse"] = to_warehouse_name_pk
+    elif item_inout == "OUT":
+        docData["from_warehouse"] = from_warehouse_name_pk
+
+    entryDoc = frappe.get_doc({"doctype": "Stock Entry", "docstatus": 1, **docData})
 
     for item in itemsDict:
         _ = entryDoc.append("items", {**item})
