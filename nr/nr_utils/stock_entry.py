@@ -46,6 +46,10 @@ def createStockEntry(
         stock_entry_type = "Material Issue"
         if not from_warehouse:
             frappe.throw(msg="Need from_warehouse")
+    elif item_inout == "TRANSFER":
+        stock_entry_type = "Material Transfer"
+        if not from_warehouse and not to_warehouse:
+            frappe.throw(msg="Need both from_warehouse and to_warehouse")
     else:
         frappe.throw("Unknown item_inout")
 
@@ -78,6 +82,9 @@ def createStockEntry(
     if item_inout == "IN":
         docData["to_warehouse"] = to_warehouse_name_pk
     elif item_inout == "OUT":
+        docData["from_warehouse"] = from_warehouse_name_pk
+    elif item_inout == "TRANSFER":
+        docData["to_warehouse"] = to_warehouse_name_pk
         docData["from_warehouse"] = from_warehouse_name_pk
 
     entryDoc = frappe.get_doc({"doctype": "Stock Entry", "docstatus": 1, **docData})

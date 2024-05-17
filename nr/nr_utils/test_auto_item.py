@@ -1,4 +1,4 @@
-# bench --site mysite run-tests --module "nr.nr_utils.test_auto_item"
+# tbench --site mysite run-tests --module "nr.nr_utils.test_auto_item"
 
 import frappe
 import unittest

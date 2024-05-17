@@ -24,9 +24,11 @@ class TestStockEntry(unittest.TestCase):
 
     def test_stock_entry(self):
 
-        to_warehouse = "XXX"
-        from_warehouse = "XXX"
+        to_warehouse = "XXX1"
+        from_warehouse = "XXX2"
+        item_inout = "IN"
         item_inout = "OUT"
+        item_inout = "TRANSFER"
         itemsArray = [
             dict(item_code="A0003", qty=10.5, basic_rate=100),
             dict(item_code="A0004", qty=100.5, basic_rate=200),
