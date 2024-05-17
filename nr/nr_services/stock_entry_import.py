@@ -1,12 +1,21 @@
 import frappe
 import pandas as pd
-from nr.nr_utils.auto_sales import processAutoSale
 from nr.nr_utils.auto_stock_entry_import import processAutoStockEntryImport
+from nr.nr_utils.warehouse import getOrCreateWarehouse
+
+# Column names
+colsReqNoBlank = ["id", "posting_date", "item_inout", "item_code", "qty"]
+
+colsReqNullable = ["from_warehouse", "to_warehouse"]
+
+# colsOpt = ["basic_rate"]
+
+colsReqAll = [*colsReqNoBlank, *colsReqNullable]
 
 
 def processStockEntryGroup(dfg):
 
-    group_key = dfg.iloc[0, :]["custom_external_sales_order_id"]
+    group_key = dfg.iloc[0, :]["id"]
     print("----------- processing: ", group_key, " :----------------")
 
     # Make sure that there is no duplicated item since this will cuase problem with validation of payment entry and delivery note.
@@ -16,14 +25,7 @@ def processStockEntryGroup(dfg):
         dfg = dfg[~filtItemDup]
 
     # Check whether these info are all duplicated.
-    colsDup = [
-        "custom_external_sales_order_id",
-        "custom_sales_order_source",
-        "posting_date",
-        "due_date",
-        "delivery_date",
-        "customer_name",
-    ]
+    colsDup = ["id", "posting_date", "item_inout", "to_warehouse", "from_warehouse"]
     dfd = dfg[colsDup].copy()
     dfd = dfd.drop_duplicates()
 
@@ -34,69 +36,55 @@ def processStockEntryGroup(dfg):
         )
 
     row = dfd.iloc[0, :]
-    customer_name = row["customer_name"]
-    delivery_date = row["delivery_date"]
-    due_date = row["due_date"]
     posting_date = row["posting_date"]
-    custom_external_sales_order_id = row["custom_external_sales_order_id"]
-    custom_sales_order_source = row["custom_sales_order_source"]
+    item_inout = row["item_inout"]
+    to_warehouse = row["to_warehouse"]
+    from_warehouse = row["from_warehouse"]
 
     itemsArray = []
-    for idx, row in dfg.iterrows():
+    for _, row in dfg.iterrows():
         item = dict(
             item_code=row["item_code"],
-            item_name=row["item_name"],
-            rate=row["rate"],
             qty=row["qty"],
         )
+        if "basic_rate" in row:
+            item["basic_rate"] = row["basic_rate"]
         itemsArray.append(item)
 
-    processAutoSale(
-        customer_name=customer_name,
+    processAutoStockEntryImport(
         itemsArray=itemsArray,
-        delivery_date=delivery_date,
-        due_date=due_date,
         posting_date=posting_date,
-        custom_external_sales_order_id=custom_external_sales_order_id,
-        custom_sales_order_source=custom_sales_order_source,
-        stock_uom="Nos_frac",
+        item_inout=item_inout,
+        to_warehouse=to_warehouse,
+        from_warehouse=from_warehouse,
     )
 
     frappe.db.commit()
+
+
+def processExcelWarehouse(row, key):
+    warehouse_name = row[key]
+    if warehouse_name:
+        warehouse_name_pk = getOrCreateWarehouse(warehouse_name)
+        return warehouse_name_pk
+    return warehouse_name
 
 
 def processExcelAutoStockEntryImport(filepath):
     dft = pd.read_excel(
         filepath,
         dtype={
-            "custom_external_sales_order_id": str,
-            "posting_date": "str",
-            "due_date": "str",
-            "delivery_date": "str",
+            "id": str,
+            "posting_date": str,
         },
     )
     cols = dft.columns.values
 
-    # Check requred columns
-    colsReq = [
-        "custom_external_sales_order_id",
-        "custom_sales_order_source",
-        "posting_date",
-        "due_date",
-        "delivery_date",
-        "customer_name",
-        "item_code",
-        "item_name",
-        "rate",
-        "qty",
-    ]
-    for c in colsReq:
+    for c in colsReqAll:
         if c not in cols:
             frappe.throw(title="Error", msg=f"Missing {c} column.")
 
-    # Make sure customer name is clean
-    dft["customer_name"] = dft["customer_name"].str.strip().str.replace("  ", " ")
+    dft.apply(lambda row: processExcelWarehouse(row, "to_warehouse"), axis=1)
+    dft.apply(lambda row: processExcelWarehouse(row, "from_warehouse"), axis=1)
 
-    dft["custom_sales_order_source"] = dft["custom_sales_order_source"].fillna("OTHER")
-
-    dft.groupby(by="custom_external_sales_order_id").apply(processStockEntryGroup)
+    dft.groupby(by="id").apply(processStockEntryGroup)
