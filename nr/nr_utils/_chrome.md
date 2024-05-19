@@ -29,5 +29,6 @@ start-process "chrome.exe" "http://localhost:8000/app/employee-checkin", '--prof
 start-process "chrome.exe" "http://localhost:8000/app/attendance", '--profile-directory="Default"' &
 
 # Testing Stock Entry
+start-process "chrome.exe" "http://localhost:8000/app/nr-stock-entry-import", '--profile-directory="Default"' &
 start-process "chrome.exe" "http://localhost:8000/app/item", '--profile-directory="Default"' &
 start-process "chrome.exe" "http://localhost:8000/app/stock-entry", '--profile-directory="Default"' &
