@@ -47,6 +47,7 @@ def processSalesOrderGroup(dfg):
             item_name=row["item_name"],
             rate=row["rate"],
             qty=row["qty"],
+            warehouse=row["warehouse"]
         )
         itemsArray.append(item)
 
@@ -58,7 +59,7 @@ def processSalesOrderGroup(dfg):
         posting_date=posting_date,
         custom_external_sales_order_id=custom_external_sales_order_id,
         custom_sales_order_source=custom_sales_order_source,
-        stock_uom="Nos_frac",
+        stock_uom="Nos_frac"
     )
 
     frappe.db.commit()
@@ -88,6 +89,7 @@ def processExcelAutoSalesFile(filepath):
         "item_name",
         "rate",
         "qty",
+        "warehouse"
     ]
     for c in colsReq:
         if c not in cols:

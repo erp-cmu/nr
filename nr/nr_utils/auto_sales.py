@@ -17,6 +17,7 @@ from nr.nr_utils.payment_entry import (
     createPaymentReferencesItemDict,
 )
 from nr.nr_utils.delivery_note import createDeliveryNote, createDeliveryNoteItemDict
+from nr.nr_utils.warehouse import getOrCreateWarehouse
 import frappe
 
 
@@ -28,7 +29,7 @@ def processAutoSale(
     posting_date,
     custom_external_sales_order_id,
     custom_sales_order_source="OTHER",
-    stock_uom="Nos",
+    stock_uom="Nos"
 ):
     # NOTE: This process does not take into account valuation rate.
     # Example of itemArray
@@ -123,6 +124,7 @@ def processAutoSale(
         item_name = itemsArrayEle["item_name"]
         rate = itemsArrayEle["rate"]
         qty = itemsArrayEle["qty"]
+        warehouse = itemsArrayEle["warehouse"]
 
         item_code_pk, uom_name = getOrCreateItem(
             item_code=item_code, item_name=item_name, allow_negative_stock=True
@@ -133,6 +135,7 @@ def processAutoSale(
         si_detail = getSalesInvoiceItem(
             sales_invoice_name=sales_invoice_pk, item_code=item_code_pk
         )
+        warehouse_pk = getOrCreateWarehouse(warehouse_name=warehouse)
         item = createDeliveryNoteItemDict(
             item_code=item_code_pk,
             qty=qty,
@@ -142,6 +145,7 @@ def processAutoSale(
             against_sales_invoice=sales_invoice_pk,
             si_detail=si_detail,
             uom=uom_name,
+            warehouse=warehouse
         )
         itemsDict.append(item)
 
