@@ -108,3 +108,5 @@ def processExcelAutoSalesFile(filepath):
     dft["warehouse"].apply(lambda warehouse_name: getOrCreateWarehouse(warehouse_name, parent_warehouse="All Warehouses"))
 
     dft.groupby(by="custom_external_sales_order_id").apply(processSalesOrderGroup)
+
+    
