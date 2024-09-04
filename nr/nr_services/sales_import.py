@@ -1,7 +1,8 @@
 import frappe
 import pandas as pd
 from nr.nr_utils.auto_sales import processAutoSale
-
+from nr.nr_utils.customer import getOrCreateCustomer
+from nr.nr_utils.warehouse import getOrCreateWarehouse
 
 def processSalesOrderGroup(dfg):
 
@@ -99,5 +100,11 @@ def processExcelAutoSalesFile(filepath):
     dft["customer_name"] = dft["customer_name"].str.strip().str.replace("  ", " ")
 
     dft["custom_sales_order_source"] = dft["custom_sales_order_source"].fillna("OTHER")
+
+    # Create customers    
+    dft["customer_name"].apply(getOrCreateCustomer)
+    
+    # Create warehouse
+    dft["warehouse"].apply(lambda warehouse_name: getOrCreateWarehouse(warehouse_name, parent_warehouse="All Warehouses"))
 
     dft.groupby(by="custom_external_sales_order_id").apply(processSalesOrderGroup)

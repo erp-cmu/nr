@@ -145,7 +145,7 @@ def processAutoSale(
             against_sales_invoice=sales_invoice_pk,
             si_detail=si_detail,
             uom=uom_name,
-            warehouse=warehouse
+            warehouse=warehouse_pk
         )
         itemsDict.append(item)
 

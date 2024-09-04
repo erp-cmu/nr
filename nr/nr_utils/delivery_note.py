@@ -12,10 +12,11 @@ def createDeliveryNoteItemDict(
     against_sales_invoice=None,
     si_detail=None,
     uom="Nos",
+    warehouse=""
 ):
 
     billed_amt = qty * rate
-    item = dict(item_code=item_code, qty=qty, rate=rate, uom=uom, billed_amt=billed_amt)
+    item = dict(item_code=item_code, qty=qty, rate=rate, uom=uom, billed_amt=billed_amt, warehouse=warehouse)
 
     if against_sales_order and so_detail:
         item["against_sales_order"] = against_sales_order
